@@ -69,7 +69,6 @@ export const useCreateQuestion = ({ range, methods }: { range: number; methods: 
     }
 
     questionList.value.push(..._questionList)
-    console.log(_questionList)
     return _questionList
   }
 
