@@ -17,6 +17,10 @@ const playOptions = computed(() => {
 
 const { questionList, generate } = useCreateQuestion(playOptions.value)
 
+onMounted(() => {
+  generate(5)
+  console.log(questionList.value)
+})
 </script>
 
 <template>

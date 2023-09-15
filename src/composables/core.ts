@@ -77,3 +77,47 @@ export const useCreateQuestion = ({ range, methods }: { range: number; methods: 
     generate,
   }
 }
+
+/**
+ * 答题记录
+ */
+export const useAnswerRecord = () => {
+  const submitBefore = ref<Function>()
+
+  const answerRecord = ref<string[]>([])
+
+  const curAnswer = ref<string[]>([])
+
+  const showCurAnswer = computed(() => curAnswer.value.join(''))
+
+  const setSubmitBefore = (fn: Function) => {
+    submitBefore.value = fn
+  }
+
+  const handleCurAnswer = async(key: string) => {
+    switch (key) {
+      case 'Backspace':
+        curAnswer.value.pop()
+        break
+      case 'Enter':
+        if (submitBefore.value) {
+          await submitBefore.value(showCurAnswer.value)
+        }
+
+        answerRecord.value.push(showCurAnswer.value)
+
+        curAnswer.value = []
+        break
+      default:
+        curAnswer.value.push(key)
+        break
+    }
+  }
+
+  return {
+    showCurAnswer,
+    handleCurAnswer,
+    answerRecord,
+    setSubmitBefore,
+  }
+}

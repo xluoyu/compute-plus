@@ -1,23 +1,12 @@
 <script setup lang="ts">
+import { useAnswerRecord } from '~/composables/core'
 
-const res = ref<string[]>([])
+const { handleCurAnswer } = useAnswerRecord()
 
-const resValue = computed(() => res.value.join(''))
-
-const handle = (key: string) => {
-  switch (key) {
-    case 'Backspace':
-      res.value.pop()
-      break
-    case 'Enter':
-      console.log('提交', resValue.value)
-      break
-    default:
-      res.value.push(key)
-      break
-  }
-}
-
+/**
+ * 点击事件
+ * @param e
+ */
 const handleClickItem = (e: MouseEvent) => {
   let target = e.target as HTMLElement
 
@@ -25,14 +14,20 @@ const handleClickItem = (e: MouseEvent) => {
     target = target.parentElement!
   }
 
-  handle(target.dataset.content as string)
+  handleCurAnswer(target.dataset.content as string)
 }
 
+/**
+ * 需要监听的键盘按键
+ */
 const KeyList = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0', 'Enter', 'Backspace']
 
 const handleKeyBoard = (e: KeyboardEvent) => {
   if (KeyList.includes(e.key)) {
-    handle(e.key)
+    handleCurAnswer(e.key)
+    /**
+     * 添加点击样式
+     */
     const item = document.querySelector(`.keyboard [data-content="${e.key}"]`)!
 
     item.classList.add('active')
@@ -54,7 +49,6 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <p>{{ resValue }}</p>
   <div class="keyboard grid gap-2 justify-center items-center" @click="handleClickItem">
     <div class="btn" data-content="7">
       7
