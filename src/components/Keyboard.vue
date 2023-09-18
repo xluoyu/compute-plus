@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { useAnswerRecord } from '~/composables/core'
-
-const { handleCurAnswer } = useAnswerRecord()
+const props = defineProps<{
+  handleCurAnswer: (key: string) => Promise<void>
+}>()
 
 /**
  * 点击事件
@@ -14,7 +14,7 @@ const handleClickItem = (e: MouseEvent) => {
     target = target.parentElement!
   }
 
-  handleCurAnswer(target.dataset.content as string)
+  props.handleCurAnswer(target.dataset.content as string)
 }
 
 /**
@@ -24,7 +24,7 @@ const KeyList = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0', 'Enter', 'Bac
 
 const handleKeyBoard = (e: KeyboardEvent) => {
   if (KeyList.includes(e.key)) {
-    handleCurAnswer(e.key)
+    props.handleCurAnswer(e.key)
     /**
      * 添加点击样式
      */
@@ -95,9 +95,9 @@ onUnmounted(() => {
   grid-template-columns: repeat(4, 70px);
 }
 .btn{
-  @apply full text-white rounded-sm flex items-center justify-center;
+  @apply full text-slate-100 rounded-sm flex items-center justify-center;
   /* background-image: radial-gradient(circle, #9bc7f4, #42688e); */
-  background: #4a9aeb;
+  background: #507abd;
   border-radius: 8px;
   box-shadow: inset 0px -3px 10px 2px rgb(0 0 0 / 0.5);
   &.active, &:active{

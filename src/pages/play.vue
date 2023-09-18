@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { defaultConfig, useCreateQuestion } from '~/composables'
+import { defaultConfig, useAnswerRecord, useCreateQuestion } from '~/composables'
 const route = useRoute()
 
 const playOptions = computed(() => {
@@ -17,17 +17,30 @@ const playOptions = computed(() => {
 
 const { questionList, generate } = useCreateQuestion(playOptions.value)
 
+const questionIndex = ref(0)
+
+const curQuestion = computed(() => questionList.value[questionIndex.value])
+
 onMounted(() => {
   generate(5)
-  console.log(questionList.value)
+})
+
+const { showCurAnswer, setSubmitBefore, handleCurAnswer } = useAnswerRecord()
+
+setSubmitBefore(() => {
+  console.log('准备提交答案')
 })
 </script>
 
 <template>
   <div>
-    <div>题目</div>
+    <div>
+      <div>题目</div>
+      <div />
+    </div>
     <div>解答</div>
-    <Keyboard />
+    <div>{{ showCurAnswer }}</div>
+    <Keyboard :handle-cur-answer="handleCurAnswer" />
   </div>
 </template>
 
