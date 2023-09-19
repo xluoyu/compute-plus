@@ -23,6 +23,8 @@ const curQuestion = computed(() => questionList.value[questionIndex.value])
 
 onMounted(() => {
   generate(5)
+
+  console.log(curQuestion.value)
 })
 
 const { showCurAnswer, setSubmitBefore, handleCurAnswer } = useAnswerRecord()
@@ -36,7 +38,13 @@ setSubmitBefore(() => {
   <div>
     <div>
       <div>题目</div>
-      <div />
+      <div v-if="curQuestion">
+        <span>{{ curQuestion.a }}</span>
+        <span>{{ curQuestion.fn }}</span>
+        <span>{{ curQuestion.b }}</span>
+        <span> = </span>
+        <span> {{ curQuestion.answer }} </span>
+      </div>
     </div>
     <div>解答</div>
     <div>{{ showCurAnswer }}</div>

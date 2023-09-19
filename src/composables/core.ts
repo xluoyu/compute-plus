@@ -22,6 +22,16 @@ export const defaultConfig = {
   },
 }
 
+const Divisors = [2, 3, 5]
+
+/**
+   * 获取一个范围内的随机数
+   * 向上取整
+   */
+const getRoundDivisor = () => {
+  return Divisors[Math.ceil(Math.random() * 3)]
+}
+
 /**
  * 用于生成题目
  * @param range 数值范围
@@ -54,9 +64,29 @@ export const useCreateQuestion = ({ range, methods }: { range: number; methods: 
     const _questionList = []
 
     for (let index = 0; index < num; index++) {
-      const a = getRoundNum()
-      const b = getRoundNum()
+      let a = getRoundNum()
+      let b = getRoundNum()
       const fn = getMethod()
+
+      if (fn === '-' && a < b) {
+        // 排除负数的情况
+        [a, b] = [b, a]
+      } else if (fn === '/') {
+        /**
+         * 为了除法好计算
+         */
+        const _b = getRoundDivisor()
+        const _answer = a * _b
+
+        _questionList.push({
+          a: _answer,
+          b: _b,
+          fn,
+          answer: a,
+        })
+
+        break
+      }
 
       const answer = compute(a, b, fn)
 
