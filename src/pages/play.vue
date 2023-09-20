@@ -35,23 +35,50 @@ setSubmitBefore(() => {
 </script>
 
 <template>
-  <div>
-    <div>
-      <div>题目</div>
-      <div v-if="curQuestion">
-        <span>{{ curQuestion.a }}</span>
-        <span>{{ curQuestion.fn }}</span>
-        <span>{{ curQuestion.b }}</span>
-        <span> = </span>
-        <span> {{ curQuestion.answer }} </span>
+  <div class="flex flex-col justify-evenly h-full">
+    <div class="box">
+      <div class="title">
+        <span>题目</span>
+        <span>2/30</span>
+      </div>
+      <div class="box-content">
+        <div v-if="curQuestion">
+          <span>{{ curQuestion.a }}</span>
+          <span>{{ curQuestion.fn }}</span>
+          <span>{{ curQuestion.b }}</span>
+          <span> = </span>
+          <span> ? </span>
+        </div>
       </div>
     </div>
-    <div>解答</div>
-    <div>{{ showCurAnswer }}</div>
+    <div class="box">
+      <div class="title">
+        解答
+      </div>
+      <div class="box-content">
+        {{ showCurAnswer }}
+      </div>
+    </div>
+
     <Keyboard :handle-cur-answer="handleCurAnswer" />
   </div>
 </template>
 
-<style scoped>
-
+<style lang="scss" scoped>
+.box{
+  .title{
+    display: flex;
+    justify-content: space-between;
+  }
+  .box-content{
+    height: 74px;
+    box-sizing: border-box;
+    border: 2px solid #febd84;
+    background-color: #fcecde;
+    border-radius: 6px;
+    font-size: 32px;
+    padding: 12px 0;
+    margin: 16px auto;
+  }
+}
 </style>
