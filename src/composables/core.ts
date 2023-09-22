@@ -62,6 +62,7 @@ export const useCreateQuestion = ({ range, methods }: { range: number; methods: 
 
   const generate = (num: number) => {
     const _questionList = []
+    const baseIndex = questionList.value.length
 
     for (let index = 0; index < num; index++) {
       let a = getRoundNum()
@@ -79,6 +80,7 @@ export const useCreateQuestion = ({ range, methods }: { range: number; methods: 
         const _answer = a * _b
 
         _questionList.push({
+          i: baseIndex + index,
           a: _answer,
           b: _b,
           fn,
@@ -91,6 +93,7 @@ export const useCreateQuestion = ({ range, methods }: { range: number; methods: 
       const answer = compute(a, b, fn)
 
       _questionList.push({
+        i: baseIndex + index,
         a,
         b,
         fn,

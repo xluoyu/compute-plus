@@ -46,7 +46,7 @@ onUnmounted(() => {
 
 <template>
   <!-- 移动端需要touchstart事件才会触发:active -->
-  <div class="keyboard grid gap-2 justify-center items-center" @touchstart="handleClickItem">
+  <div class="keyboard grid gap-2 justify-center items-center" @touchstart.stop.prevent="handleClickItem" @click="handleClickItem">
     <div class="btn" data-content="7">
       7
     </div>

@@ -4,7 +4,9 @@
 
 <template>
   <div>
-    <h3>选择难度</h3>
+    <h3 class="test">
+      选择难度
+    </h3>
     <div class="flex flex-col items-center gap-3">
       <routerLink to="/play?type=1" class="btn">
         入门
@@ -28,5 +30,9 @@
 <style scoped>
 .btn{
   @apply bg-white rounded w-[80%] max-w-lg py-3 cursor-pointer hover:bg-gray-200;
+}
+
+.test{
+  transform: perspective(5em) rotateX(-10deg);
 }
 </style>
