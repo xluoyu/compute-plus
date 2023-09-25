@@ -29,11 +29,48 @@ const beginPlay = () => {
   questionRef.value?.begin()
 }
 
-const { showCurAnswer, setSubmitBefore, handleCurAnswer } = useAnswerRecord()
+/**
+ *
+ * @param result
+ */
+const resultClassName = ref('')
+const answerArea = ref<HTMLDivElement>()
 
-setSubmitBefore(() => {
-  console.log('准备提交答案')
-})
+const showCurResultAnime = (result: boolean): Promise<void> => {
+  return new Promise((resolve) => {
+    resultClassName.value = result ? 'success-anime' : 'error-anime'
+    const animeEndFn = () => {
+      console.log('动画结束')
+      resultClassName.value = ''
+      resolve()
+      // answerArea.value!.removeEventListener('animationend', animeEndFn)
+    }
+
+    setTimeout(() => {
+      animeEndFn()
+    }, 300)
+
+    // answerArea.value!.addEventListener('animationend', animeEndFn)
+  })
+}
+
+const { showCurAnswer, handleCurAnswer } = useAnswerRecord({
+  submitBefore: async(answer, index) => {
+    const curQuestion = questionList.value[index]
+    const result = curQuestion.answer === answer
+
+    await showCurResultAnime(result)
+
+    return result
+  },
+  submitEnd: (list) => {
+    if (list.length === questionList.value.length) {
+      console.log('游戏结束')
+      console.log('最终得分', list.filter(Boolean).length, list)
+    }
+  },
+},
+)
 </script>
 
 <template>
@@ -48,7 +85,7 @@ setSubmitBefore(() => {
         <div class="title">
           解答
         </div>
-        <div class="box-content">
+        <div ref="answerArea" class="box-content" :class="resultClassName">
           {{ showCurAnswer }}
         </div>
       </div>
@@ -67,6 +104,7 @@ setSubmitBefore(() => {
   }
   .box-content{
     height: 74px;
+    line-height: 74px;
     overflow: hidden;
     box-sizing: border-box;
     border: 2px solid #febd84;
@@ -75,15 +113,22 @@ setSubmitBefore(() => {
     font-size: 32px;
     margin: 16px auto;
     position: relative;
+    transform: all .3s;
     >div{
       position: absolute;
       left: 0;
       right: 0;
-      top: 12px;
+      top: 0;
       width: 100%;
       margin: 0 auto;
     }
   }
 }
 
+.success-anime{
+  color: green
+}
+.error-anime{
+  color: red
+}
 </style>
