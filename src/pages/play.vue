@@ -1,7 +1,11 @@
 <script setup lang="ts">
 import { defaultConfig, useAnswerRecord, useCreateQuestion } from '~/composables'
+import type Question from '~/components/Question.vue'
 const route = useRoute()
 
+/**
+ * 根据url的参数，获取入参
+ */
 const playOptions = computed(() => {
   if (route.query.type) {
     return defaultConfig[route.query.type as unknown as keyof typeof defaultConfig]
@@ -17,26 +21,12 @@ const playOptions = computed(() => {
 
 const { questionList, generate } = useCreateQuestion(playOptions.value)
 
-const questionIndex = ref<number>(-1)
-
-const curQuestion = computed(() => questionList.value[questionIndex.value])
-const curQuestionIndex = computed(() => Math.min(questionIndex.value + 1, questionList.value.length))
-
-const beginRoll = () => {
-  const timer = setInterval(() => {
-    (questionIndex.value as number) += 1
-
-    console.log(questionIndex.value)
-    if (questionIndex.value >= questionList.value.length) {
-      clearInterval(timer)
-    }
-  }, 1500)
-}
+const questionRef = ref<InstanceType<typeof Question> | null>(null)
 
 onMounted(() => {
   generate(5)
 
-  // beginRoll()
+  questionRef.value?.begin()
 })
 
 const { showCurAnswer, setSubmitBefore, handleCurAnswer } = useAnswerRecord()
@@ -51,29 +41,7 @@ setSubmitBefore(() => {
     <Header title="关卡2" />
 
     <div class="flex flex-col h-[calc(100%-var(--header-h))] justify-around">
-      <div class="box">
-        <div class="title">
-          <span>题目</span>
-          <span>{{ curQuestionIndex }} / {{ questionList.length }}</span>
-        </div>
-        <div class="box-content">
-          <Transition name="roll">
-            <div v-if="curQuestion" :key="curQuestion.i" class="grid grid-cols-5 !w-2/3 mx-auto">
-              <span>{{ curQuestion.a }}</span>
-              <span>{{ curQuestion.fn }}</span>
-              <span>{{ curQuestion.b }}</span>
-              <span> = </span>
-              <span> ? </span>
-            </div>
-            <div v-else-if="questionIndex > 0 && curQuestionIndex === questionList.length">
-              题目播放完毕
-            </div>
-            <div v-else>
-              准备开始
-            </div>
-          </Transition>
-        </div>
-      </div>
+      <Question ref="questionRef" :list="questionList" />
       <div class="box">
         <div class="title">
           解答
@@ -88,7 +56,7 @@ setSubmitBefore(() => {
   </div>
 </template>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .box{
   .title{
     display: flex;
@@ -103,12 +71,8 @@ setSubmitBefore(() => {
     background-color: #fcecde;
     border-radius: 6px;
     font-size: 32px;
-    // padding: 12px 0;
     margin: 16px auto;
     position: relative;
-    // display: flex;
-    // flex-direction: column-reverse;
-    // justify-content: center;
     >div{
       position: absolute;
       left: 0;
@@ -120,19 +84,4 @@ setSubmitBefore(() => {
   }
 }
 
-.roll-leave-active {
-  transition:transform 0.5s;
-}
-.roll-enter-from{
-  transform: translateY(-100%) perspective(2em) rotateX(25deg) scale(.9);
-}
-.roll-enter-active {
-  transition:transform 0.5s;
-}
-.roll-enter-to{
-  transform: translateY(0) perspective(2em) rotateX(0deg) scale(1);
-}
-.roll-leave-to {
-  transform: translateY(100%) perspective(2em) rotateX(-25deg)  scale(.9);
-}
 </style>

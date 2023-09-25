@@ -1,8 +1,8 @@
 <script setup lang="ts">
 const props = withDefaults(defineProps<{
   title: string
-  path: string
-  hasBack: boolean
+  path?: string
+  hasBack?: boolean
 }>(), {
   hasBack: true,
   path: '',
