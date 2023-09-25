@@ -23,11 +23,11 @@ const { questionList, generate } = useCreateQuestion(playOptions.value)
 
 const questionRef = ref<InstanceType<typeof Question> | null>(null)
 
-onMounted(() => {
+const beginPlay = () => {
   generate(5)
 
   questionRef.value?.begin()
-})
+}
 
 const { showCurAnswer, setSubmitBefore, handleCurAnswer } = useAnswerRecord()
 
@@ -39,6 +39,8 @@ setSubmitBefore(() => {
 <template>
   <div class="px-3 h-full">
     <Header title="关卡2" />
+
+    <Countdown @begin="beginPlay" />
 
     <div class="flex flex-col h-[calc(100%-var(--header-h))] justify-around">
       <Question ref="questionRef" :list="questionList" />

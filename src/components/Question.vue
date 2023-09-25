@@ -11,10 +11,11 @@ const curQuestion = computed(() => props.list[questionIndex.value])
 const curQuestionIndex = computed(() => Math.min(questionIndex.value + 1, props.list.length))
 
 const beginRoll = () => {
-  const timer = setInterval(() => {
-    (questionIndex.value as number) += 1
+  questionIndex.value += 1
 
-    console.log(questionIndex.value)
+  const timer = setInterval(() => {
+    questionIndex.value += 1
+
     if (questionIndex.value >= props.list.length) {
       clearInterval(timer)
     }
