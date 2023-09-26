@@ -76,8 +76,7 @@ const { showCurAnswer, handleCurAnswer } = useAnswerRecord({
       router.push('/result')
     }
   },
-},
-)
+})
 </script>
 
 <template>

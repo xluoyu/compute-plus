@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { answerRecord } from '~/composables/core'
+import { answerRecord } from '~/composables'
 
 const score = computed(() => {
   return answerRecord.value.filter(Boolean).length
