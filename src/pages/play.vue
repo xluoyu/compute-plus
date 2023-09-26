@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { defaultConfig, useAnswerRecord, useCreateQuestion } from '~/composables'
 import type Question from '~/components/Question.vue'
+import CarbonCheckmarkOutline from '~icons/carbon/checkmark-outline'
+import CarbonCloseOutline from '~icons/carbon/close-outline'
+
 const route = useRoute()
 
 /**
@@ -33,26 +36,27 @@ const beginPlay = () => {
  *
  * @param result
  */
-const resultClassName = ref('')
+const curAnswerResult = ref(0)
 const answerArea = ref<HTMLDivElement>()
 
 const showCurResultAnime = (result: boolean): Promise<void> => {
   return new Promise((resolve) => {
-    resultClassName.value = result ? 'success-anime' : 'error-anime'
+    /**
+     * 动画结束
+     */
     const animeEndFn = () => {
-      console.log('动画结束')
-      resultClassName.value = ''
+      curAnswerResult.value = 0
       resolve()
-      // answerArea.value!.removeEventListener('animationend', animeEndFn)
+      answerArea.value!.removeEventListener('animationend', animeEndFn)
     }
 
-    setTimeout(() => {
-      animeEndFn()
-    }, 300)
+    answerArea.value!.addEventListener('animationend', animeEndFn, false)
 
-    // answerArea.value!.addEventListener('animationend', animeEndFn)
+    curAnswerResult.value = result ? 1 : 2
   })
 }
+
+const router = useRouter()
 
 const { showCurAnswer, handleCurAnswer } = useAnswerRecord({
   submitBefore: async(answer, index) => {
@@ -64,9 +68,12 @@ const { showCurAnswer, handleCurAnswer } = useAnswerRecord({
     return result
   },
   submitEnd: (list) => {
+    console.log('游戏提交', list)
+
     if (list.length === questionList.value.length) {
-      console.log('游戏结束')
       console.log('最终得分', list.filter(Boolean).length, list)
+
+      router.push('/result')
     }
   },
 },
@@ -85,8 +92,12 @@ const { showCurAnswer, handleCurAnswer } = useAnswerRecord({
         <div class="title">
           解答
         </div>
-        <div ref="answerArea" class="box-content" :class="resultClassName">
-          {{ showCurAnswer }}
+        <div class="box-content">
+          <div ref="answerArea" class="answerArea" :class="curAnswerResult === 1 ? 'answer-success' : curAnswerResult === 2 ? 'answer-error' : ''">
+            {{ showCurAnswer }}
+            <CarbonCheckmarkOutline v-show="curAnswerResult === 1" />
+            <CarbonCloseOutline v-show="curAnswerResult === 2" />
+          </div>
         </div>
       </div>
 
@@ -113,22 +124,44 @@ const { showCurAnswer, handleCurAnswer } = useAnswerRecord({
     font-size: 32px;
     margin: 16px auto;
     position: relative;
-    transform: all .3s;
-    >div{
-      position: absolute;
-      left: 0;
-      right: 0;
-      top: 0;
-      width: 100%;
-      margin: 0 auto;
-    }
+  }
+
+  .answerArea{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
   }
 }
 
-.success-anime{
-  color: green
+.answer-success{
+  animation: success-animation .3s ease;
+
 }
-.error-anime{
-  color: red
+.answer-error{
+  color: rgb(218, 6, 6);
+  animation: error-animation .3s ease;
+}
+@keyframes success-animation {
+  0% {
+    color: inherit;
+  }
+  100% {
+    color: #59cb0c;
+  }
+}
+@keyframes error-animation {
+  0% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-15px);
+  }
+  75% {
+    transform: translateX(15px);
+  }
+  100% {
+    transform: translateX(0);
+  }
 }
 </style>

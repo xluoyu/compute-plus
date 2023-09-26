@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import CarbonArrowLeft from '~icons/carbon/arrow-left'
+
 const props = defineProps<{
   handleCurAnswer: (key: string) => Promise<void>
 }>()
@@ -57,7 +59,7 @@ onUnmounted(() => {
       9
     </div>
     <div class="btn row-span-2 !bg-[#f24e08]" data-content="Backspace">
-      <svg xmlns="http://www.w3.org/2000/svg" class="pointer-events-none" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M21 11H6.83l3.58-3.59L9 6l-6 6l6 6l1.41-1.41L6.83 13H21v-2z" /></svg>
+      <CarbonArrowLeft class="pointer-events-none"/>
     </div>
     <div class="btn" data-content="4">
       4
@@ -78,7 +80,8 @@ onUnmounted(() => {
       3
     </div>
     <div class="btn row-span-2 !bg-[#ff7700]" data-content="Enter">
-      <svg xmlns="http://www.w3.org/2000/svg" class="pointer-events-none" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M20 4v9a4 4 0 0 1-4 4H6.914l2.5 2.5L8 20.914L3.086 16L8 11.086L9.414 12.5l-2.5 2.5H16a2 2 0 0 0 2-2V4h2Z" /></svg>
+      Enter
+      <!-- <svg xmlns="http://www.w3.org/2000/svg" class="pointer-events-none" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M20 4v9a4 4 0 0 1-4 4H6.914l2.5 2.5L8 20.914L3.086 16L8 11.086L9.414 12.5l-2.5 2.5H16a2 2 0 0 0 2-2V4h2Z" /></svg> -->
     </div>
     <div class="btn col-span-3" data-content="0">
       0

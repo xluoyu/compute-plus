@@ -34,7 +34,7 @@ defineExpose({
       <span>题目</span>
       <span>{{ curQuestionIndex }} / {{ list.length }}</span>
     </div>
-    <div class="box-content">
+    <div class="box-content question-area">
       <Transition name="roll">
         <div v-if="curQuestion" :key="curQuestion.i" class="grid grid-cols-5 !w-2/3 mx-auto">
           <span>{{ curQuestion.a }}</span>
@@ -55,6 +55,16 @@ defineExpose({
 </template>
 
 <style lang="scss" scoped>
+.question-area{
+  >div{
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    width: 100%;
+    margin: 0 auto;
+  }
+}
 .roll-leave-active {
   transition:transform 0.5s;
 }

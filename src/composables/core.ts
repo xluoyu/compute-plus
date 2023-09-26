@@ -112,16 +112,18 @@ export const useCreateQuestion = ({ range, methods }: { range: number; methods: 
 }
 
 /**
+ * 用户的答案成绩记录
+ */
+export const answerRecord = ref<boolean[]>([])
+
+/**
  * 答题记录
  */
 export const useAnswerRecord = ({ submitBefore, submitEnd }: {
   submitBefore: (answer: number, index: number) => boolean | Promise<boolean> // 提交之前，须在外侧判断结果正确性
   submitEnd: (list: boolean[]) => void // 提交之后，可以根据不同条件，结束游戏
 }) => {
-  /**
-   * 用户的答案组
-   */
-  const answerRecord = ref<boolean[]>([])
+  answerRecord.value = []
 
   /**
    * 当前的答案
@@ -170,6 +172,5 @@ export const useAnswerRecord = ({ submitBefore, submitEnd }: {
     showCurAnswer,
     answerIndex,
     handleCurAnswer,
-    answerRecord,
   }
 }
