@@ -29,7 +29,7 @@ const Divisors = [2, 3, 5]
    * 向上取整
    */
 const getRoundDivisor = () => {
-  return Divisors[Math.ceil(Math.random() * 3)]
+  return Divisors[Math.floor(Math.random() * 3)]
 }
 
 /**
