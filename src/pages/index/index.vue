@@ -1,9 +1,10 @@
 <script setup lang="ts">
-
+import GameTitle from './Title.vue'
 </script>
 
 <template>
   <div>
+    <GameTitle />
     <h3 class="test">
       选择难度
     </h3>
