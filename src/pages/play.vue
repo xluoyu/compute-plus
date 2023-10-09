@@ -117,7 +117,7 @@ const { showCurAnswer, handleCurAnswer } = useAnswerRecord({
     line-height: 74px;
     overflow: hidden;
     box-sizing: border-box;
-    border: 2px solid #febd84;
+    border: 2px solid #fcd1ab;
     background-color: #fcecde;
     border-radius: 6px;
     font-size: 32px;

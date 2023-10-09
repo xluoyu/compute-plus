@@ -3,26 +3,18 @@ import GameTitle from './Title.vue'
 </script>
 
 <template>
-  <div>
+  <div class="mx-8">
     <GameTitle />
-    <h3 class="test">
-      选择难度
-    </h3>
-    <div class="flex flex-col items-center gap-3">
-      <routerLink to="/play?type=1" class="btn">
-        入门
-      </routerLink>
-      <routerLink to="/play?type=2" class="btn">
-        普通
-      </routerLink>
-      <routerLink to="/play?type=3" class="btn">
-        困难
-      </routerLink>
-      <routerLink to="/play?type=4" class="btn">
-        地狱
-      </routerLink>
+
+    <div class="grid grid-cols-2 gap-3">
       <button class="btn">
-        HELP
+        开始
+      </button>
+      <button class="btn">
+        继续
+      </button>
+      <button class="btn col-span-2">
+        自定义
       </button>
     </div>
   </div>
@@ -30,7 +22,7 @@ import GameTitle from './Title.vue'
 
 <style scoped>
 .btn{
-  @apply bg-white rounded w-[80%] max-w-lg py-3 cursor-pointer hover:bg-gray-200;
+  @apply bg-white rounded w-full py-3 cursor-pointer hover:bg-gray-200;
 }
 
 .test{

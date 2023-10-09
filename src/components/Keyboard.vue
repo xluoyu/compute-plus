@@ -58,8 +58,8 @@ onUnmounted(() => {
     <div class="btn" data-content="9">
       9
     </div>
-    <div class="btn row-span-2 !bg-[#f24e08]" data-content="Backspace">
-      <CarbonArrowLeft class="pointer-events-none"/>
+    <div class="btn row-span-2 !bg-[#f66d66db]" data-content="Backspace">
+      <CarbonArrowLeft class="pointer-events-none" />
     </div>
     <div class="btn" data-content="4">
       4
@@ -79,9 +79,8 @@ onUnmounted(() => {
     <div class="btn" data-content="3">
       3
     </div>
-    <div class="btn row-span-2 !bg-[#ff7700]" data-content="Enter">
+    <div class="btn row-span-2 !bg-[#69cf7a]" data-content="Enter">
       Enter
-      <!-- <svg xmlns="http://www.w3.org/2000/svg" class="pointer-events-none" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M20 4v9a4 4 0 0 1-4 4H6.914l2.5 2.5L8 20.914L3.086 16L8 11.086L9.414 12.5l-2.5 2.5H16a2 2 0 0 0 2-2V4h2Z" /></svg> -->
     </div>
     <div class="btn col-span-3" data-content="0">
       0
@@ -96,10 +95,12 @@ onUnmounted(() => {
   user-select: none;
 }
 .btn{
-  @apply full text-slate-100 rounded-sm flex items-center justify-center;
+  @apply full rounded-sm flex items-center justify-center;
   /* background-image: radial-gradient(circle, #9bc7f4, #42688e); */
-  background: #f5a966;
+  background: #d9f3fd;
+  color: #333;
   border-radius: 8px;
+  opacity: 1;
   box-shadow: inset 0px -3px 10px 2px rgb(0 0 0 / 0.3);
   &.active, &:active{
     opacity: .7;
