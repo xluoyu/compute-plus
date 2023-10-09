@@ -24,7 +24,6 @@
 <style lang="scss" scoped>
 #title{
   position: relative;
-  padding: 40px 0;
   width: 300px;
   margin: 0 auto;
 }
