@@ -58,7 +58,7 @@ const showCurResultAnime = (result: boolean): Promise<void> => {
 
 const router = useRouter()
 
-const { showCurAnswer, handleCurAnswer } = useAnswerRecord({
+const { showCurAnswer, handleCurAnswer, answerIndex } = useAnswerRecord({
   submitBefore: async(answer, index) => {
     const curQuestion = questionList.value[index]
     const result = curQuestion.answer === answer
@@ -89,7 +89,7 @@ const { showCurAnswer, handleCurAnswer } = useAnswerRecord({
       <Question ref="questionRef" :list="questionList" />
       <div class="box">
         <div class="title">
-          解答
+          答题 {{ answerIndex }}
         </div>
         <div class="box-content">
           <div ref="answerArea" class="answerArea" :class="curAnswerResult === 1 ? 'answer-success' : curAnswerResult === 2 ? 'answer-error' : ''">
