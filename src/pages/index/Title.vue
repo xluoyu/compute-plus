@@ -37,35 +37,36 @@
 .text-copy {
   fill: transparent;
   stroke: white;
-  stroke-dasharray: 15% 30%;
-  stroke-width: 2px;
-  animation: stroke-offset 3s ease-in-out forwards;
+  stroke-dasharray: 15% 45%;
+  stroke-width: 3px;
+  animation: stroke-offset 2s ease-in-out forwards;
 }
 .text-copy:nth-child(1) {
   stroke: #488BF3;
-  stroke-dashoffset: 10%;
+  stroke-dashoffset: 15%;
 }
 .text-copy:nth-child(2) {
   stroke: #FFDC2F;
-  stroke-dashoffset: 20%;
+  stroke-dashoffset: 30%;
 }
 .text-copy:nth-child(3) {
   stroke: #F75B40;
-  stroke-dashoffset: 30%;
+  stroke-dashoffset: 45%;
 }
 .text-copy:nth-child(4) {
   stroke: #66C567;
-  stroke-dashoffset: 40%;
+  stroke-dashoffset: 60%;
 }
 
 @keyframes stroke-offset {
-  20% {
+  0% {
     stroke-dashoffset: 40%;
     stroke-dasharray: 0% 40%;
   }
 }
 
 h1 {
+  --animation-time: 1.5s;
   position: absolute;
   right: 40px;
   margin: auto;
@@ -78,7 +79,7 @@ h1 {
   user-select: none;
   white-space: nowrap;
   filter: blur(0.007em);
-  animation: shake 2.5s linear forwards;
+  animation: shake var(--animation-time) linear forwards;
 }
 
 h1 span {
@@ -98,12 +99,12 @@ h1::after {
 }
 
 h1::before {
-    animation: crack1 2.5s linear forwards;
+    animation: crack1 var(--animation-time) linear forwards;
     clip-path: polygon(0% 0%, 10% 0%, 55% 100%, 0% 100%);
 }
 
 h1::after {
-    animation: crack2 2.5s linear forwards;
+    animation: crack2 var(--animation-time) linear forwards;
     clip-path: polygon(44% 0%, 100% 0%, 100% 100%, 70% 100%);
 }
 
