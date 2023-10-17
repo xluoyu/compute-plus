@@ -3,9 +3,9 @@ import type { IQuestion } from '~/common'
 /**
  * 各个难度的默认配置
  */
-export const defaultConfig = {
+export const defaultLevelConfig = {
   1: {
-    range: 10,
+    range: 20,
     methods: ['+'],
   },
   2: {
@@ -13,10 +13,6 @@ export const defaultConfig = {
     methods: ['+', '-'],
   },
   3: {
-    range: 12,
-    methods: ['+', '-', '*'],
-  },
-  4: {
     range: 20,
     methods: ['+', '-', '*', '/'],
   },

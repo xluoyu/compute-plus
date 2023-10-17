@@ -19,11 +19,12 @@ const beginRoll = () => {
     if (questionIndex.value >= props.list.length) {
       clearInterval(timer)
     }
-  }, 1500)
+  }, 1000)
 }
 
 defineExpose({
   begin: beginRoll,
+  curQuestionIndex,
 })
 
 </script>

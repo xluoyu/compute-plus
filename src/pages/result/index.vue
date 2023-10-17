@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { gsap } from 'gsap'
 import Trophy from './trophy.vue'
+import Aperture from './aperture.vue'
 import { answerRecord } from '~/composables'
 
 const score = computed(() => {
@@ -31,7 +32,10 @@ const test = () => {
   <div>
     结果 {{ score }} {{ d.nums }}
   </div>
-  <trophy :num="d.nums" />
+  <div class="relative w-[full] mx-auto h-[300px] overflow-hidden">
+    <!-- <aperture class="" /> -->
+    <trophy :num="d.nums" class="z-10 absolute" />
+  </div>
   <div @click="test">
     点击
   </div>

@@ -3,17 +3,26 @@ import ABtn from './ABtn.vue'
 import GameTitle from './Title.vue'
 import CarbonLogoGithub from '~icons/carbon/logo-github'
 const router = useRouter()
-const handleClick = (key: string) => {
-  console.log(key)
-  router.push('/play')
-  // switch (key) {
-  //   case value:
 
-  //     break;
+type BtnKeys = 'continue' | 'begin' | 'endless' | 'diy'
 
-  //   default:
-  //     break;
-  // }
+const curLevel = localStorage.getItem('level') || '1'
+
+const handleClick = (key: BtnKeys) => {
+  switch (key) {
+    case 'begin':
+      router.push('/play')
+      break
+    case 'continue':
+      router.push(`/play?level=${curLevel}`)
+      break
+    case 'endless':
+      router.push('/play?type=endless')
+      break
+    case 'diy':
+      router.push('/diy')
+      break
+  }
 }
 </script>
 

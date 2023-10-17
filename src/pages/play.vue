@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { defaultConfig, useAnswerRecord, useCreateQuestion } from '~/composables'
+import { defaultLevelConfig, useAnswerRecord, useCreateQuestion } from '~/composables'
 import type Question from '~/components/Question.vue'
 import CarbonCheckmarkOutline from '~icons/carbon/checkmark-outline'
 import CarbonCloseOutline from '~icons/carbon/close-outline'
@@ -9,16 +9,21 @@ const route = useRoute()
 /**
  * 根据url的参数，获取入参
  */
-const playOptions = computed(() => {
-  if (route.query.type) {
-    return defaultConfig[route.query.type as unknown as keyof typeof defaultConfig]
+const playOptions = computed<{
+  methods: string[]
+  range: number
+}>(() => {
+  if (route.query.level) {
+    return defaultLevelConfig[route.query.level as unknown as keyof typeof defaultLevelConfig]
+  } else if (route.query.type === 'endless') {
+    return defaultLevelConfig[3]
   } else if (route.query.range || route.query.methods) {
     return {
       range: route.query.range ? Number(route.query.range) : 10,
-      methods: route.query.methods ? (route.query.methods as string).split(',') : defaultConfig[1].methods,
+      methods: route.query.methods ? (route.query.methods as string).split(',') : defaultLevelConfig[1].methods,
     }
   } else {
-    return defaultConfig[1]
+    return defaultLevelConfig[1]
   }
 })
 
@@ -59,7 +64,7 @@ const showCurResultAnime = (result: boolean): Promise<void> => {
 const router = useRouter()
 
 const { showCurAnswer, handleCurAnswer, answerIndex } = useAnswerRecord({
-  submitBefore: async(answer, index) => {
+  getSubmitResult: async(answer, index) => {
     const curQuestion = questionList.value[index]
     const result = curQuestion.answer === answer
 
@@ -77,6 +82,13 @@ const { showCurAnswer, handleCurAnswer, answerIndex } = useAnswerRecord({
     }
   },
 })
+
+/**
+ * 当前滚动到的考题下标
+ */
+const curIndex = computed(() => questionRef.value?.curQuestionIndex || 0)
+
+const lockStatus = computed(() => curIndex.value < 3)
 </script>
 
 <template>
@@ -100,7 +112,7 @@ const { showCurAnswer, handleCurAnswer, answerIndex } = useAnswerRecord({
         </div>
       </div>
 
-      <Keyboard :handle-cur-answer="handleCurAnswer" />
+      <Keyboard :handle-cur-answer="handleCurAnswer" :cur-answer="showCurAnswer" :lock="lockStatus" />
     </div>
   </div>
 </template>

@@ -1,4 +1,8 @@
 <script setup lang="ts">
+/**
+ * 全屏倒计时
+ * 默认3s
+ */
 const emits = defineEmits<{
   (e: 'begin'): void
 }>()
