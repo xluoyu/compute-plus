@@ -1,9 +1,11 @@
 import type { IQuestion } from '~/common'
 
+type IMethods = '+' | '-' | '*' | '/'
+
 /**
  * 各个难度的默认配置
  */
-export const defaultLevelConfig = {
+export const defaultLevelConfig: Record<number, { range: number; methods: IMethods[] }> = {
   1: {
     range: 20,
     methods: ['+'],
@@ -18,14 +20,56 @@ export const defaultLevelConfig = {
   },
 }
 
-const Divisors = [2, 3, 5]
+/**
+ * 获取一个范围内的随机数
+ * 向上取整
+ */
+const getRoundNum = (maxNum: number) => {
+  return Math.ceil(Math.random() * maxNum)
+}
 
 /**
-   * 获取一个范围内的随机数
-   * 向上取整
-   */
-const getRoundDivisor = () => {
-  return Divisors[Math.floor(Math.random() * 3)]
+ * 创建题目
+ */
+const createQuestion: Record<IMethods, (range: number, i: number) => IQuestion> = {
+  '+': (range, i) => {
+    const a = getRoundNum(range - 1)
+    const b = getRoundNum(range - a)
+
+    const answer = a + b
+
+    return { a, b, fn: '+', answer, i }
+  },
+  '-': (range, i) => {
+    let a = getRoundNum(range)
+    let b = getRoundNum(range)
+
+    /**
+     * 如果a小于b，交换位置
+     * 保证答案为正数
+     */
+    if (a < b) {
+      [a, b] = [b, a]
+    }
+
+    const answer = a - b
+
+    return { a, b, fn: '-', answer, i }
+  },
+  '*': (_, i) => {
+    const a = getRoundNum(9)
+    const b = getRoundNum(9)
+    const answer = a * b
+
+    return { a, b, fn: '*', answer, i }
+  },
+  '/': (_, i) => {
+    const b = getRoundNum(9)
+    const answer = getRoundNum(9)
+    const a = answer * b
+
+    return { a, b, fn: '/', answer, i }
+  },
 }
 
 /**
@@ -33,21 +77,8 @@ const getRoundDivisor = () => {
  * @param range 数值范围
  * @param difficulty 题目难度
  */
-export const useCreateQuestion = ({ range, methods }: { range: number; methods: string[] }) => {
+export const useCreateQuestion = ({ range, methods }: { range: number; methods: IMethods[] }) => {
   const questionList = ref<IQuestion[]>([])
-
-  /**
-   * 获取一个范围内的随机数
-   * 向上取整
-   */
-  const getRoundNum = () => {
-    return Math.ceil(Math.random() * range)
-  }
-
-  const compute = (a: number, b: number, fn: string) => {
-    // eslint-disable-next-line no-new-func
-    return new Function(`return ${a}${fn}${b}`)()
-  }
 
   /**
    * 获取一个给定范围的计算方法
@@ -61,40 +92,10 @@ export const useCreateQuestion = ({ range, methods }: { range: number; methods: 
     const baseIndex = questionList.value.length
 
     for (let index = 0; index < num; index++) {
-      let a = getRoundNum()
-      let b = getRoundNum()
       const fn = getMethod()
+      const question = createQuestion[fn](range, baseIndex + index)
 
-      if (fn === '-' && a < b) {
-        // 排除负数的情况
-        [a, b] = [b, a]
-      } else if (fn === '/') {
-        /**
-         * 为了除法好计算
-         */
-        const _b = getRoundDivisor()
-        const _answer = a * _b
-
-        _questionList.push({
-          i: baseIndex + index,
-          a: _answer,
-          b: _b,
-          fn,
-          answer: a,
-        })
-
-        break
-      }
-
-      const answer = compute(a, b, fn)
-
-      _questionList.push({
-        i: baseIndex + index,
-        a,
-        b,
-        fn,
-        answer,
-      })
+      _questionList.push(question)
     }
 
     questionList.value.push(..._questionList)
