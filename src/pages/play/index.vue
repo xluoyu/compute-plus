@@ -1,6 +1,11 @@
 <script setup lang="ts">
+import Countdown from './components/Countdown.vue'
+import Header from './components/Header.vue'
+import Keyboard from './components/Keyboard.vue'
+import Question from './components/Question.vue'
+import type { QuestionInstance } from './components/index'
+import type { IMethods } from '~/composables'
 import { defaultLevelConfig, useAnswerRecord, useCreateQuestion } from '~/composables'
-import type Question from '~/components/Question.vue'
 import CarbonCheckmarkOutline from '~icons/carbon/checkmark-outline'
 import CarbonCloseOutline from '~icons/carbon/close-outline'
 
@@ -10,7 +15,7 @@ const route = useRoute()
  * 根据url的参数，获取入参
  */
 const playOptions = computed<{
-  methods: string[]
+  methods: IMethods[]
   range: number
 }>(() => {
   if (route.query.level) {
@@ -20,21 +25,22 @@ const playOptions = computed<{
   } else if (route.query.range || route.query.methods) {
     return {
       range: route.query.range ? Number(route.query.range) : 10,
-      methods: route.query.methods ? (route.query.methods as string).split(',') : defaultLevelConfig[1].methods,
+      methods: route.query.methods ? (route.query.methods as string).split(',') as IMethods[] : defaultLevelConfig[1].methods,
     }
-  } else {
+  }
+  else {
     return defaultLevelConfig[1]
   }
 })
 
 const { questionList, generate } = useCreateQuestion(playOptions.value)
 
-const questionRef = ref<InstanceType<typeof Question> | null>(null)
+const questionRef = ref<QuestionInstance>()
 
 const beginPlay = () => {
   generate(5)
-
-  questionRef.value?.begin()
+  console.log(questionRef.value)
+  questionRef.value!.begin()
 }
 
 /**

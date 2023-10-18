@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { IQuestion } from '~/common'
+import type { IQuestion } from '~/common.d'
 
 const props = defineProps<{
   list: IQuestion[]
@@ -10,6 +10,9 @@ const questionIndex = ref<number>(-1)
 const curQuestion = computed(() => props.list[questionIndex.value])
 const curQuestionIndex = computed(() => Math.min(questionIndex.value + 1, props.list.length))
 
+/**
+ * 题目开始滚动
+ */
 const beginRoll = () => {
   questionIndex.value += 1
 
@@ -19,7 +22,7 @@ const beginRoll = () => {
     if (questionIndex.value >= props.list.length) {
       clearInterval(timer)
     }
-  }, 1000)
+  }, 1500)
 }
 
 defineExpose({

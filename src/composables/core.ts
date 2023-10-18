@@ -1,6 +1,6 @@
 import type { IQuestion } from '~/common'
 
-type IMethods = '+' | '-' | '*' | '/'
+export type IMethods = '+' | '-' | '*' | '/'
 
 /**
  * 各个难度的默认配置
