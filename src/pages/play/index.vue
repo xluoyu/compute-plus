@@ -4,8 +4,9 @@ import Header from './components/Header.vue'
 import Keyboard from './components/Keyboard.vue'
 import Question from './components/Question.vue'
 import type { QuestionInstance } from './components/index'
-import type { IMethods } from '~/composables'
-import { defaultLevelConfig, useAnswerRecord, useCreateQuestion } from '~/composables'
+import type { IDefaultLevelConfigKeys } from './composables'
+import { defaultLevelConfig, useAnswerRecord, useCreateQuestion } from './composables'
+import type { ICreateQuestionOptions, IMethods } from '~/common'
 import CarbonCheckmarkOutline from '~icons/carbon/checkmark-outline'
 import CarbonCloseOutline from '~icons/carbon/close-outline'
 
@@ -14,22 +15,33 @@ const route = useRoute()
 /**
  * 根据url的参数，获取入参
  */
-const playOptions = computed<{
-  methods: IMethods[]
-  range: number
-}>(() => {
-  if (route.query.level) {
-    return defaultLevelConfig[route.query.level as unknown as keyof typeof defaultLevelConfig]
-  } else if (route.query.type === 'endless') {
-    return defaultLevelConfig[3]
-  } else if (route.query.range || route.query.methods) {
-    return {
-      range: route.query.range ? Number(route.query.range) : 10,
-      methods: route.query.methods ? (route.query.methods as string).split(',') as IMethods[] : defaultLevelConfig[1].methods,
-    }
-  }
-  else {
-    return defaultLevelConfig[1]
+const playOptions = computed<ICreateQuestionOptions>(() => {
+  switch (route.query.type) {
+    case 'endless':
+      return {
+        type: 'endless',
+        errNumber: 3,
+        methods: defaultLevelConfig[3].methods,
+      }
+    case 'diy':
+      if (!(route.query.range && route.query.methods && route.query.successType)) {
+        return { type: 'normal', ...defaultLevelConfig[1] }
+      }
+      return {
+        type: 'diy',
+        range: Number(route.query.range),
+        methods: (route.query.methods as string).split(',') as IMethods[],
+        successType: route.query.successType as ('normal' | 'endless'),
+        accuracy: Number(route.query.accuracy),
+        questionNum: Number(route.query.questionNum),
+        errNumber: Number(route.query.errNumber),
+      }
+    default:
+      if (route.query.level) {
+        return { type: 'normal', ...defaultLevelConfig[route.query.level as unknown as IDefaultLevelConfigKeys] }
+      } else {
+        return { type: 'normal', ...defaultLevelConfig[1] }
+      }
   }
 })
 
@@ -39,7 +51,6 @@ const questionRef = ref<QuestionInstance>()
 
 const beginPlay = () => {
   generate(5)
-  console.log(questionRef.value)
   questionRef.value!.begin()
 }
 

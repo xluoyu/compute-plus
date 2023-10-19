@@ -1,24 +1,35 @@
-import type { IQuestion } from '~/common'
-
-export type IMethods = '+' | '-' | '*' | '/'
+import type { ICreateQuestionOptions, IMethods, IQuestion } from '~/common'
 
 /**
  * 各个难度的默认配置
  */
-export const defaultLevelConfig: Record<number, { range: number; methods: IMethods[] }> = {
+export const defaultLevelConfig: Record<number, {
+  range: number
+  methods: IMethods[]
+  accuracy: number
+  questionNum: number
+}> = {
   1: {
-    range: 20,
+    range: 10,
     methods: ['+'],
+    questionNum: 10,
+    accuracy: 70,
   },
   2: {
     range: 20,
     methods: ['+', '-'],
+    questionNum: 15,
+    accuracy: 80,
   },
   3: {
     range: 20,
     methods: ['+', '-', '*', '/'],
+    questionNum: 20,
+    accuracy: 85,
   },
 }
+
+export type IDefaultLevelConfigKeys = keyof typeof defaultLevelConfig
 
 /**
  * 获取一个范围内的随机数
@@ -77,14 +88,14 @@ const createQuestion: Record<IMethods, (range: number, i: number) => IQuestion> 
  * @param range 数值范围
  * @param difficulty 题目难度
  */
-export const useCreateQuestion = ({ range, methods }: { range: number; methods: IMethods[] }) => {
+export const useCreateQuestion = (options: ICreateQuestionOptions) => {
   const questionList = ref<IQuestion[]>([])
 
   /**
    * 获取一个给定范围的计算方法
    */
   const getMethod = () => {
-    return methods[Math.floor(Math.random() * methods.length)]
+    return options.methods[Math.floor(Math.random() * options.methods.length)]
   }
 
   const generate = (num: number) => {
@@ -93,7 +104,27 @@ export const useCreateQuestion = ({ range, methods }: { range: number; methods: 
 
     for (let index = 0; index < num; index++) {
       const fn = getMethod()
-      const question = createQuestion[fn](range, baseIndex + index)
+      let _range = 0
+      /**
+       * 如果有预设的范围，按照预设
+       */
+      if ('range' in options) {
+        _range = options.range
+      } else {
+        /**
+         * 没有预设范围，’endless‘模式 | 'diy'模式-’endless‘条件
+         *
+         * +、- 为20
+         * *、/ 为15
+         */
+        if (fn === '+' || fn === '-') {
+          _range = 20
+        } else {
+          _range = 15
+        }
+      }
+
+      const question = createQuestion[fn](_range, baseIndex + index)
 
       _questionList.push(question)
     }
