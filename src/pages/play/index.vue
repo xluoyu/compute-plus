@@ -14,6 +14,8 @@ const route = useRoute()
 
 /**
  * 根据url的参数，获取入参
+ *
+ * 返回创建题目所需的参数
  */
 const playOptions = computed<ICreateQuestionOptions>(() => {
   switch (route.query.type) {
@@ -45,6 +47,11 @@ const playOptions = computed<ICreateQuestionOptions>(() => {
   }
 })
 
+/**
+ * 建立题目创建功能
+ *
+ * 返回：题目列表
+ */
 const { questionList, generate } = useCreateQuestion(playOptions.value)
 
 const questionRef = ref<QuestionInstance>()
@@ -106,6 +113,15 @@ const { showCurAnswer, handleCurAnswer, answerIndex } = useAnswerRecord({
 const curIndex = computed(() => questionRef.value?.curQuestionIndex || 0)
 
 const lockStatus = computed(() => curIndex.value < 3)
+
+onMounted(() => {
+  /**
+   * 在游戏开始前，需要判断游玩类型
+   *
+   */
+  // const isFirstPlay = localStorage.getItem("isFirstPlay")
+
+})
 </script>
 
 <template>

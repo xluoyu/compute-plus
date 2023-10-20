@@ -98,6 +98,10 @@ export const useCreateQuestion = (options: ICreateQuestionOptions) => {
     return options.methods[Math.floor(Math.random() * options.methods.length)]
   }
 
+  /**
+   * 创建 num 数量的题目
+   * @param num
+   */
   const generate = (num: number) => {
     const _questionList = []
     const baseIndex = questionList.value.length

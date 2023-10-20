@@ -4,15 +4,19 @@
  * 默认3s
  */
 const emits = defineEmits<{
-  (e: 'begin'): void
+  (e: 'downEnd'): void
 }>()
 
-const showStatus = ref(true)
+const showStatus = ref(false)
 const num = ref<null | number>(null)
 
 const timer = ref<NodeJS.Timer>()
 
+/**
+ * 开始倒计时层
+ */
 const beginDown = () => {
+  showStatus.value = true
   num.value = 3
 
   timer.value = setInterval(() => {
@@ -22,12 +26,14 @@ const beginDown = () => {
       clearInterval(timer.value)
       showStatus.value = false
 
-      emits('begin')
+      emits('downEnd')
     }
   }, 1000)
 }
 
-onMounted(beginDown)
+defineExpose({
+  beginDown,
+})
 </script>
 
 <template>
