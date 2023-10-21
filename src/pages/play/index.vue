@@ -53,7 +53,7 @@ const playOptions = computed<ICreateQuestionOptions>(() => {
  *
  * 返回：题目列表
  */
-const { questionList, generate } = useCreateQuestion(playOptions.value)
+const { questionList } = useCreateQuestion(playOptions.value)
 
 /**
  *
@@ -79,7 +79,7 @@ const showCurResultAnime = (result: boolean): Promise<void> => {
   })
 }
 
-const router = useRouter()
+// const router = useRouter()
 
 const { showCurAnswer, handleCurAnswer, answerIndex } = useAnswerRecord({
   getSubmitResult: async(answer, index) => {
@@ -96,7 +96,7 @@ const { showCurAnswer, handleCurAnswer, answerIndex } = useAnswerRecord({
     if (list.length === questionList.value.length) {
       console.log('最终得分', list.filter(Boolean).length, list)
 
-      router.push('/result')
+      // router.push('/result')
     }
   },
 })
@@ -112,7 +112,6 @@ const questionRef = ref<QuestionInstance>()
  */
 const ready = () => {
   countDownRef.value!.beginDown()
-  generate(5)
 }
 
 /**

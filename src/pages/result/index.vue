@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { gsap } from 'gsap'
 import Trophy from './trophy.vue'
-import Aperture from './aperture.vue'
 import { answerRecord } from '~/composables'
 
 const score = computed(() => {

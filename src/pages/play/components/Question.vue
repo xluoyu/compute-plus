@@ -23,7 +23,7 @@ const beginRoll = () => {
     if (questionIndex.value >= props.list.length) {
       clearInterval(timer)
     }
-  }, 1500)
+  }, 1300)
 }
 
 defineExpose({

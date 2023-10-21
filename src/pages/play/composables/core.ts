@@ -137,6 +137,17 @@ export const useCreateQuestion = (options: ICreateQuestionOptions) => {
     return _questionList
   }
 
+  if ('questionNum' in options && options.questionNum) {
+    generate(options.questionNum)
+  } else {
+    /**
+     * 没有预设questionNum
+     *
+     * 说明是无尽模式，直接生成20题
+     */
+    generate(20)
+  }
+
   return {
     questionList,
     generate,
