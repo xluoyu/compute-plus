@@ -7,7 +7,8 @@
     "lint": "eslint . --fix",
     "typecheck": "vue-tsc --noEmit",
     "preview": "vite preview",
-    "test": "vitest"
+    "test": "vitest",
+		"commit": "git add -A && cz"
   },
   "dependencies": {
     "@vueuse/core": "^8.2.5",
@@ -23,6 +24,8 @@
     "@vitejs/plugin-vue": "^2.3.1",
     "@vue/test-utils": "^2.0.0-rc.19",
     "autoprefixer": "^10.4.15",
+    "commitizen": "^4.3.0",
+    "cz-conventional-changelog": "^3.3.0",
     "eslint": "^8.13.0",
     "jsdom": "^19.0.0",
     "pnpm": "^6.32.6",
@@ -37,5 +40,10 @@
     "vite-plugin-pages": "^0.22.0",
     "vitest": "^0.9.3",
     "vue-tsc": "^0.34.2"
+  },
+  "config": {
+    "commitizen": {
+      "path": "cz-conventional-changelog"
+    }
   }
 }
