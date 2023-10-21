@@ -14,6 +14,7 @@ const curQuestionIndex = computed(() => Math.min(questionIndex.value + 1, props.
  * 题目开始滚动
  */
 const beginRoll = () => {
+  console.log('开始游戏')
   questionIndex.value += 1
 
   const timer = setInterval(() => {

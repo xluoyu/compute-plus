@@ -5,10 +5,6 @@ import '@vue/runtime-core'
 
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
-    Countdown: typeof import('./src/components/Countdown.vue')['default']
-    Header: typeof import('./src/components/Header.vue')['default']
-    Keyboard: typeof import('./src/components/Keyboard.vue')['default']
-    Question: typeof import('./src/components/Question.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
   }

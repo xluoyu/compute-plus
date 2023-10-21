@@ -3,7 +3,8 @@ import Countdown from './components/Countdown.vue'
 import Header from './components/Header.vue'
 import Keyboard from './components/Keyboard.vue'
 import Question from './components/Question.vue'
-import type { QuestionInstance } from './components/index'
+import Guide from './components/Guide.vue'
+import type { CountdownInstance, QuestionInstance } from './components/index'
 import type { IDefaultLevelConfigKeys } from './composables'
 import { defaultLevelConfig, useAnswerRecord, useCreateQuestion } from './composables'
 import type { ICreateQuestionOptions, IMethods } from '~/common'
@@ -54,13 +55,6 @@ const playOptions = computed<ICreateQuestionOptions>(() => {
  */
 const { questionList, generate } = useCreateQuestion(playOptions.value)
 
-const questionRef = ref<QuestionInstance>()
-
-const beginPlay = () => {
-  generate(5)
-  questionRef.value!.begin()
-}
-
 /**
  *
  * @param result
@@ -108,28 +102,38 @@ const { showCurAnswer, handleCurAnswer, answerIndex } = useAnswerRecord({
 })
 
 /**
+ * 开始游戏
+ */
+const countDownRef = ref<CountdownInstance>()
+const questionRef = ref<QuestionInstance>()
+
+/**
+ * 进入倒计时
+ */
+const ready = () => {
+  countDownRef.value!.beginDown()
+  generate(5)
+}
+
+/**
+ * 生成题目，开始滚动
+ */
+const beginPlay = () => {
+  questionRef.value!.begin()
+}
+
+/**
  * 当前滚动到的考题下标
  */
 const curIndex = computed(() => questionRef.value?.curQuestionIndex || 0)
 
 const lockStatus = computed(() => curIndex.value < 3)
 
-onMounted(() => {
-  /**
-   * 在游戏开始前，需要判断游玩类型
-   *
-   */
-  // const isFirstPlay = localStorage.getItem("isFirstPlay")
-
-})
 </script>
 
 <template>
   <div class="px-3 h-full">
     <Header title="关卡2" />
-
-    <Countdown @begin="beginPlay" />
-
     <div class="flex flex-col h-[calc(100%-var(--header-h))] justify-around">
       <Question ref="questionRef" :list="questionList" />
       <div class="box">
@@ -147,6 +151,9 @@ onMounted(() => {
 
       <Keyboard :handle-cur-answer="handleCurAnswer" :cur-answer="showCurAnswer" :lock="lockStatus" />
     </div>
+
+    <Guide @close="ready" />
+    <Countdown ref="countDownRef" @downEnd="beginPlay" />
   </div>
 </template>
 
