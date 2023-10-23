@@ -4,6 +4,7 @@ import Header from './components/Header.vue'
 import Keyboard from './components/Keyboard.vue'
 import Question from './components/Question.vue'
 import Guide from './components/Guide.vue'
+import Result from './components/Result/index.vue'
 import type { CountdownInstance, QuestionInstance } from './components/index'
 import type { IDefaultLevelConfigKeys } from './composables'
 import { defaultLevelConfig, useAnswerRecord, useCreateQuestion } from './composables'
@@ -79,8 +80,6 @@ const showCurResultAnime = (result: boolean): Promise<void> => {
   })
 }
 
-// const router = useRouter()
-
 const { showCurAnswer, handleCurAnswer, answerIndex } = useAnswerRecord({
   getSubmitResult: async(answer, index) => {
     const curQuestion = questionList.value[index]
@@ -111,7 +110,8 @@ const questionRef = ref<QuestionInstance>()
  * 进入倒计时
  */
 const ready = () => {
-  countDownRef.value!.beginDown()
+  console.log('暂停')
+  // countDownRef.value!.beginDown()
 }
 
 /**
@@ -152,7 +152,8 @@ const lockStatus = computed(() => curIndex.value < 3)
     </div>
 
     <Guide @close="ready" />
-    <Countdown ref="countDownRef" @downEnd="beginPlay" />
+    <Countdown ref="countDownRef" @down-end="beginPlay" />
+    <Result />
   </div>
 </template>
 

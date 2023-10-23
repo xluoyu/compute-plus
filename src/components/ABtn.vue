@@ -1,4 +1,10 @@
 <script setup lang="ts">
+withDefaults(defineProps<{
+  width: string
+}>(), {
+  width: '300px',
+})
+
 const emits = defineEmits<{
   (e: 'click'): void
 }>()
@@ -29,7 +35,7 @@ const handleClick = () => {
 
 <style lang="scss" scoped>
 .btn{
-  --w: 300px;
+  --w: v-bind(width);
   --h: 50px;
   --color: #ed8225;
   --a-color: #e9088a;

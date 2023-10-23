@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import ABtn from './ABtn.vue'
 import GameTitle from './Title.vue'
 import CarbonLogoGithub from '~icons/carbon/logo-github'
 const router = useRouter()

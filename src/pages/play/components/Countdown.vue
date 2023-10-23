@@ -37,7 +37,7 @@ defineExpose({
 </script>
 
 <template>
-  <div v-if="showStatus" class="fixed top-0 left-0 bg-black bg-opacity-60 w-full h-full z-10">
+  <div v-if="showStatus" class="mask">
     <Transition name="countdown">
       <div :key="num || ''" class="absolute top-1/4 mx-auto text-3xl text-slate-200 left-0 right-0">
         {{ num }}

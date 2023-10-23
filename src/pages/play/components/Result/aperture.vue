@@ -1,28 +1,16 @@
-<script>
-/**
- * 参考
- *
- * https://www.cnblogs.com/coco1s/p/17753942.html
- *
- */
-export default {
-
-}
-</script>
-
 <template>
   <div class="aperture-container">
-    <div class="g-circle g-circle1" />
+    <!-- <div class="g-circle g-circle1" /> -->
     <div class="g-circle g-circle2" />
-    <!-- <div class="g-circle g-circle3" /> -->
+    <div class="g-circle g-circle3" />
     <!-- <div class="g-circle g-circle4" /> -->
-    <div class="g-circle g-mask" />
+    <!-- <div class="g-circle g-mask" /> -->
   </div>
 </template>
 
 <style lang="scss" scoped>
 .aperture-container {
-    width: 130%;
+    width: 70%;
     aspect-ratio: 1/1;
     position: absolute;
     top: 50%;
@@ -85,11 +73,11 @@ export default {
 
     .g-mask {
       position: absolute;
-      inset: -280px;
+      inset: -20px;
       background:
       radial-gradient(
             rgba(250, 240, 20, 0.2) 0,
-            rgba(255, 255, 255, .8) calc(30%),
+            rgba(0, 0, 0, 0.8) calc(30%),
             transparent calc(70%),
             transparent 100%
         );
