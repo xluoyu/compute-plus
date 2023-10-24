@@ -66,6 +66,7 @@ export const useAnswerRecord = ({ getSubmitResult, submitEnd }: {
   }
 
   return {
+    answerRecord,
     showCurAnswer,
     answerIndex,
     handleCurAnswer,

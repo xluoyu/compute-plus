@@ -1,6 +1,6 @@
 <script setup lang="ts">
 withDefaults(defineProps<{
-  width: string
+  width?: string
 }>(), {
   width: '300px',
 })

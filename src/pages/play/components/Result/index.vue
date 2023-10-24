@@ -1,36 +1,38 @@
 <script setup lang="ts">
 import { gsap } from 'gsap'
 import Trophy from './trophy.vue'
+import type { IResultOptions, IScoreType } from '~/common'
 
-const status = ref(true)
+const status = ref(false)
 
-const data = reactive({
-  score: 0,
+const data = reactive<{
+  num: number
+  type: IScoreType
+  nextFn: Function | undefined
+}>({
+  num: 0,
+  type: 'percentage',
+  nextFn: undefined,
 })
 
-const open = (options: {
-  score: number
-  total: number
-}) => {
+const open = (options: IResultOptions) => {
+  status.value = true
+  data.type = options.type
+  data.nextFn = options.nextFn
+
   gsap.to(data, {
     duration: 2,
-    score: options.score,
+    num: options.num,
     ease: 'power1.out',
     onUpdate: () => {
-      data.score = Math.round(data.score)
+      data.num = Math.round(data.num)
     },
   })
-
-  setTimeout(() => {
-    console.log(data.score)
-  }, 3000)
 }
 
-open({
-  score: 60,
-  total: 10,
+defineExpose({
+  open,
 })
-
 </script>
 
 <template>
@@ -41,16 +43,19 @@ open({
           准确率
         </p>
         <h2 class="text-4xl text-[#fff5c2]">
-          {{ data.score }} %
+          {{ data.num }} %
         </h2>
-        <Trophy :num="data.score" class="mx-auto mt-10" />
+        <Trophy :num="data.num" class="mx-auto mt-10" />
+        <p class="mt-5 text-3xl text-[#FFA400]">
+          过关啦!
+        </p>
       </div>
 
       <div class="flex justify-center gap-[10%] w-full">
         <router-link to="/" class="btn bg-gray-500">
           返回首页
         </router-link>
-        <button class="btn bg-[#ff7904]">
+        <button v-if="data.nextFn" class="btn bg-[#ff7904]" @click="data.nextFn">
           进入下一关
         </button>
       </div>

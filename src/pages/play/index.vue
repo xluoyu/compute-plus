@@ -5,14 +5,19 @@ import Keyboard from './components/Keyboard.vue'
 import Question from './components/Question.vue'
 import Guide from './components/Guide.vue'
 import Result from './components/Result/index.vue'
-import type { CountdownInstance, QuestionInstance } from './components/index'
+import type { CountdownInstance, QuestionInstance, ResultInstance } from './components/index'
 import type { IDefaultLevelConfigKeys } from './composables'
 import { defaultLevelConfig, useAnswerRecord, useCreateQuestion } from './composables'
-import type { ICreateQuestionOptions, IMethods } from '~/common'
+import type { ICreateQuestionOptions, IMethods, IResultOptions, IScoreType } from '~/common'
 import CarbonCheckmarkOutline from '~icons/carbon/checkmark-outline'
 import CarbonCloseOutline from '~icons/carbon/close-outline'
 
 const route = useRoute()
+const router = useRouter()
+
+watch(() => route.query, () => {
+  window.location.reload()
+})
 
 /**
  * 根据url的参数，获取入参
@@ -29,7 +34,7 @@ const playOptions = computed<ICreateQuestionOptions>(() => {
       }
     case 'diy':
       if (!(route.query.range && route.query.methods && route.query.successType)) {
-        return { type: 'normal', ...defaultLevelConfig[1] }
+        return { type: 'normal', level: 1, ...defaultLevelConfig[1] }
       }
       return {
         type: 'diy',
@@ -42,12 +47,34 @@ const playOptions = computed<ICreateQuestionOptions>(() => {
       }
     default:
       if (route.query.level) {
-        return { type: 'normal', ...defaultLevelConfig[route.query.level as unknown as IDefaultLevelConfigKeys] }
+        return { type: 'normal', level: Number(route.query.level), ...defaultLevelConfig[route.query.level as unknown as IDefaultLevelConfigKeys] }
       } else {
-        return { type: 'normal', ...defaultLevelConfig[1] }
+        return { type: 'normal', level: 1, ...defaultLevelConfig[1] }
       }
   }
 })
+
+/**
+ * 计分方式
+ */
+const scoreType = computed<IScoreType>(() => {
+  switch (playOptions.value.type) {
+    case 'normal':
+      return 'percentage'
+    case 'endless':
+      return 'score'
+    case 'diy':
+      if (playOptions.value.successType === 'normal') {
+        return 'percentage'
+      } else {
+        return 'score'
+      }
+  }
+})
+
+const countDownRef = ref<CountdownInstance>()
+const questionRef = ref<QuestionInstance>()
+const resultRef = ref<ResultInstance>()
 
 /**
  * 建立题目创建功能
@@ -57,7 +84,7 @@ const playOptions = computed<ICreateQuestionOptions>(() => {
 const { questionList } = useCreateQuestion(playOptions.value)
 
 /**
- *
+ * 根据题目结果，展示不用动画
  * @param result
  */
 const curAnswerResult = ref(0)
@@ -80,6 +107,34 @@ const showCurResultAnime = (result: boolean): Promise<void> => {
   })
 }
 
+/**
+ * 判断游戏是否结束
+ *
+ * 百分比模式， 需要打完所有题
+ *
+ * 记分模式，判断错题是否达到标准
+ *
+ * @param list 答题记录列表
+ */
+const isGameOver = (list: boolean[]) => {
+  if (scoreType.value === 'percentage') {
+    if (list.length === questionList.value.length) {
+      return true
+    }
+  } else {
+    const errNum = list.filter(item => !item).length
+
+    if (errNum > (playOptions.value as { errNumber: number }).errNumber) {
+      return true
+    }
+  }
+
+  return false
+}
+
+/**
+ * 实例化答题栏目
+ */
 const { showCurAnswer, handleCurAnswer, answerIndex } = useAnswerRecord({
   getSubmitResult: async(answer, index) => {
     const curQuestion = questionList.value[index]
@@ -90,27 +145,58 @@ const { showCurAnswer, handleCurAnswer, answerIndex } = useAnswerRecord({
     return result
   },
   submitEnd: (list) => {
-    console.log('游戏提交', list)
-
-    if (list.length === questionList.value.length) {
-      console.log('最终得分', list.filter(Boolean).length, list)
-
-      // router.push('/result')
+    if (!isGameOver(list)) {
+      return
     }
+
+    const trueNum = list.filter(Boolean).length
+    const allNum = list.length
+
+    const options: IResultOptions = {
+      type: scoreType.value,
+      num: 0,
+      result: false,
+    }
+
+    /**
+     * 计算分数，是否通过
+     */
+    if (scoreType.value === 'percentage') {
+      const num = Math.floor(trueNum / allNum * 100)
+
+      options.result = num >= (playOptions.value as { accuracy: number }).accuracy
+      options.num = num
+    } else {
+      options.num = trueNum
+    }
+
+    /**
+     * 闯关模式时，需要跳到下一关
+     */
+    if (playOptions.value.type === 'normal' && playOptions.value.level < 3) {
+      const curLevel = playOptions.value.level
+      options.nextFn = () => {
+        router.replace(`/play?level=${curLevel + 1}`)
+      }
+    }
+
+    resultRef.value!.open(options)
   },
 })
 
 /**
- * 开始游戏
+ * ---- 开始游戏 ----
  */
-const countDownRef = ref<CountdownInstance>()
-const questionRef = ref<QuestionInstance>()
-
 /**
  * 进入倒计时
  */
 const ready = () => {
-  console.log('暂停')
+  resultRef.value!.open({
+    type: 'percentage',
+    num: 70,
+    result: true,
+  })
+
   // countDownRef.value!.beginDown()
 }
 
@@ -153,7 +239,7 @@ const lockStatus = computed(() => curIndex.value < 3)
 
     <Guide @close="ready" />
     <Countdown ref="countDownRef" @down-end="beginPlay" />
-    <Result />
+    <Result ref="resultRef" />
   </div>
 </template>
 

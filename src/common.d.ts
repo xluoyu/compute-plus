@@ -21,6 +21,7 @@ export type IMethods = '+' | '-' | '*' | '/'
  */
 export type ICreateQuestionOptions = {
   type: 'normal'
+  level: number
   range: number // 取值范围
   methods: IMethods[]
   accuracy: number // 正确率 取百分比
@@ -41,3 +42,17 @@ export type ICreateQuestionOptions = {
   successType: 'endless' // 按照无尽模式的通关条件
   errNumber: number // 错误数量
 }))
+
+/**
+ * 计分方式
+ *
+ * 百分比 / 得分
+ */
+export type IScoreType = 'percentage' | 'score'
+
+export interface IResultOptions {
+  type: IScoreType
+  num: number
+  nextFn?: Function | undefined
+  result: boolean
+}
