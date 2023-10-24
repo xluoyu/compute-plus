@@ -11,7 +11,8 @@ import Icons from 'unplugin-icons/vite'
 export default defineConfig({
   resolve: {
     alias: {
-      '~/': `${path.resolve(__dirname, 'src')}/`,
+      '~': `${path.resolve(__dirname, 'src')}`,
+      '@': `${path.resolve(__dirname, 'src')}`,
     },
   },
   server: {
