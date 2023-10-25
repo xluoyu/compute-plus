@@ -19,18 +19,22 @@ export type IMethods = '+' | '-' | '*' | '/'
  *
  * type: => ’normal‘ 闯关模式， ’endless‘ 无尽模式， ’diy‘ 自定义
  */
-export type ICreateQuestionOptions = {
+export interface INormalOptions {
   type: 'normal'
   level: number
   range: number // 取值范围
   methods: IMethods[]
   accuracy: number // 正确率 取百分比
   questionNum: number // 题目数量
-} | {
+}
+
+export interface IEndlessOptions {
   type: 'endless'
   errNumber: number // 错误数量
   methods: IMethods[]
-} | ({
+}
+
+export type IDiyOptions = {
   type: 'diy'
   methods: IMethods[]
 } & ({
@@ -41,7 +45,9 @@ export type ICreateQuestionOptions = {
 } | {
   successType: 'endless' // 按照无尽模式的通关条件
   errNumber: number // 错误数量
-}))
+})
+
+export type ICreateQuestionOptions = INormalOptions | IEndlessOptions | IDiyOptions
 
 /**
  * 计分方式

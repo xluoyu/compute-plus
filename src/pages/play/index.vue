@@ -8,7 +8,7 @@ import Result from './components/Result/index.vue'
 import type { CountdownInstance, QuestionInstance, ResultInstance } from './components/index'
 import type { IDefaultLevelConfigKeys } from './composables'
 import { defaultLevelConfig, useAnswerRecord, useCreateQuestion } from './composables'
-import type { ICreateQuestionOptions, IMethods, IResultOptions, IScoreType } from '~/common'
+import type { ICreateQuestionOptions, IEndlessOptions, IMethods, INormalOptions, IResultOptions, IScoreType } from '~/common'
 import CarbonCheckmarkOutline from '~icons/carbon/checkmark-outline'
 import CarbonCloseOutline from '~icons/carbon/close-outline'
 
@@ -113,34 +113,9 @@ const showCurResultAnime = (result: boolean): Promise<void> => {
 }
 
 /**
- * 判断游戏是否结束
- *
- * 百分比模式， 需要打完所有题
- *
- * 记分模式，判断错题是否达到标准
- *
- * @param list 答题记录列表
- */
-const isGameOver = (list: boolean[]) => {
-  if (scoreType.value === 'percentage') {
-    if (list.length === questionList.value.length) {
-      return true
-    }
-  } else {
-    const errNum = list.filter(item => !item).length
-
-    if (errNum > (playOptions.value as { errNumber: number }).errNumber) {
-      return true
-    }
-  }
-
-  return false
-}
-
-/**
  * 实例化答题栏目
  */
-const { showCurAnswer, handleCurAnswer, answerIndex } = useAnswerRecord({
+const { showCurAnswer, handleCurAnswer, answerRecord, answerIndex } = useAnswerRecord({
   getSubmitResult: async(answer, index) => {
     const curQuestion = questionList.value[index]
     const result = curQuestion.answer === answer
@@ -149,13 +124,15 @@ const { showCurAnswer, handleCurAnswer, answerIndex } = useAnswerRecord({
 
     return result
   },
-  submitEnd: (list) => {
+  submitEnd: (list: boolean[]) => {
+    // eslint-disable-next-line @typescript-eslint/no-use-before-define
     if (!isGameOver(list)) {
       return
     }
 
     const trueNum = list.filter(Boolean).length
     const allNum = list.length
+    const falseNum = allNum - trueNum
 
     const options: IResultOptions = {
       type: scoreType.value,
@@ -164,15 +141,16 @@ const { showCurAnswer, handleCurAnswer, answerIndex } = useAnswerRecord({
     }
 
     /**
-     * 计算分数，是否通过
-     */
+   * 计算分数，是否通过
+   */
     if (scoreType.value === 'percentage') {
       const num = Math.floor(trueNum / allNum * 100)
 
-      options.result = num >= (playOptions.value as { accuracy: number }).accuracy
+      options.result = num >= (playOptions.value as INormalOptions).accuracy
       options.num = num
     } else {
       options.num = trueNum
+      options.result = falseNum <= (playOptions.value as IEndlessOptions).errNumber
     }
 
     /**
@@ -190,19 +168,41 @@ const { showCurAnswer, handleCurAnswer, answerIndex } = useAnswerRecord({
 })
 
 /**
+ * 错题数量
+ */
+const errNumber = computed(() => answerRecord.value.filter(item => !item).length)
+
+/**
+ * 判断游戏是否结束
+ *
+ * 百分比模式， 需要打完所有题
+ *
+ * 记分模式，判断错题是否达到标准
+ *
+ * @param list 答题记录列表
+ */
+const isGameOver = (list: boolean[]) => {
+  if (scoreType.value === 'percentage') {
+    if (list.length === questionList.value.length) {
+      return true
+    }
+  } else {
+    if (errNumber.value > (playOptions.value as IEndlessOptions).errNumber) {
+      return true
+    }
+  }
+
+  return false
+}
+
+/**
  * ---- 开始游戏 ----
  */
 /**
  * 进入倒计时
  */
 const ready = () => {
-  resultRef.value!.open({
-    type: 'percentage',
-    num: 70,
-    result: false,
-    nextFn: () => {},
-  })
-  // countDownRef.value!.beginDown()
+  countDownRef.value!.beginDown()
 }
 
 /**
@@ -227,8 +227,14 @@ const lockStatus = computed(() => curIndex.value < 3)
     <div class="flex flex-col h-[calc(100%-var(--header-h))] justify-around">
       <Question ref="questionRef" :list="questionList" />
       <div class="box">
-        <div class="title">
-          答题 {{ answerIndex }}
+        <div class="title flex justify-between">
+          <span>答题</span>
+          <div v-if="scoreType === 'percentage'">
+            第{{ answerIndex + 1 }}题
+          </div>
+          <div v-if="scoreType === 'score'">
+            {{ errNumber }} 错误{{ (playOptions as IEndlessOptions).errNumber }}
+          </div>
         </div>
         <div class="box-content">
           <div ref="answerArea" class="answerArea" :class="curAnswerResult === 1 ? 'answer-success' : curAnswerResult === 2 ? 'answer-error' : ''">
