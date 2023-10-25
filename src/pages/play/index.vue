@@ -46,6 +46,11 @@ const playOptions = computed<ICreateQuestionOptions>(() => {
         errNumber: Number(route.query.errNumber),
       }
     default:
+      /**
+       * 记录当前的关卡
+       */
+      localStorage.setItem('level', (route.query.level || '1') as string)
+
       if (route.query.level) {
         return { type: 'normal', level: Number(route.query.level), ...defaultLevelConfig[route.query.level as unknown as IDefaultLevelConfigKeys] }
       } else {
@@ -194,9 +199,9 @@ const ready = () => {
   resultRef.value!.open({
     type: 'percentage',
     num: 70,
-    result: true,
+    result: false,
+    nextFn: () => {},
   })
-
   // countDownRef.value!.beginDown()
 }
 

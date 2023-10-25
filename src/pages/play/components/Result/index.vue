@@ -1,33 +1,34 @@
 <script setup lang="ts">
 import { gsap } from 'gsap'
 import Trophy from './trophy.vue'
-import type { IResultOptions, IScoreType } from '~/common'
+import type { IResultOptions } from '~/common'
 
 const status = ref(false)
 
-const data = reactive<{
-  num: number
-  type: IScoreType
-  nextFn: Function | undefined
-}>({
+const data = reactive<IResultOptions>({
   num: 0,
   type: 'percentage',
   nextFn: undefined,
+  result: false,
 })
 
 const open = (options: IResultOptions) => {
   status.value = true
   data.type = options.type
   data.nextFn = options.nextFn
-
+  data.result = options.result
   gsap.to(data, {
-    duration: 2,
+    duration: 1.5,
     num: options.num,
     ease: 'power1.out',
     onUpdate: () => {
       data.num = Math.round(data.num)
     },
   })
+}
+
+const reload = () => {
+  window.location.reload()
 }
 
 defineExpose({
@@ -45,9 +46,12 @@ defineExpose({
         <h2 class="text-4xl text-[#fff5c2]">
           {{ data.num }} %
         </h2>
-        <Trophy :num="data.num" class="mx-auto mt-10" />
-        <p class="mt-5 text-3xl text-[#FFA400]">
+        <Trophy :num="data.num" class="mx-auto mt-5" />
+        <p v-if="data.result" class="result-text success-text">
           过关啦!
+        </p>
+        <p v-else class="result-text fail-text">
+          失败了!
         </p>
       </div>
 
@@ -55,8 +59,11 @@ defineExpose({
         <router-link to="/" class="btn bg-gray-500">
           返回首页
         </router-link>
-        <button v-if="data.nextFn" class="btn bg-[#ff7904]" @click="data.nextFn">
+        <button v-if="data.result && data.nextFn" class="btn bg-[#ff7904]" @click="data.nextFn">
           进入下一关
+        </button>
+        <button v-if="!data.result" class="btn bg-[#ff7904]" @click="reload">
+          再来一次！
         </button>
       </div>
     </div>
@@ -97,6 +104,30 @@ defineExpose({
   100%{
     --left: -60%;
     --right: 160%;
+  }
+}
+
+.result-text {
+  @apply mt-5 text-3xl;
+  background-clip: text;
+  color: transparent;
+  animation: resultText .6s ease;
+}
+
+.success-text{
+  background-image: linear-gradient(to bottom, #FEDF42, #FFA400);
+}
+
+.fail-text{
+  background-image: linear-gradient(to bottom, #E7E7E7, #a3a3a3);
+}
+
+@keyframes resultText {
+  0%{
+    scale: 0.2
+  }
+  100%{
+    scale: 1
   }
 }
 </style>

@@ -9,7 +9,7 @@ const nums = computed(() => `${100 - props.num}%`)
 </script>
 
 <template>
-  <div class="w-[200px] aspect-[771/963] trophy  drop-shadow-[0_5px_15px_rgba(255,243,171,0.7)]">
+  <div class="trophy drop-shadow-[0_5px_15px_rgba(255,243,171,0.7)]">
     <img src="@/assets/jiangbei.png" :style="{'--nums': nums}" class="show-trophy">
   </div>
 </template>
@@ -23,19 +23,22 @@ const nums = computed(() => `${100 - props.num}%`)
 
 .trophy{
   position: relative;
-  animation: shake 1s;
+  padding: 20px;
+  animation: fade .5s, shake 1s forwards;
   &::before{
     content: '';
-    width: 100%;
-    height: 100%;
     background: url('@/assets/jiangbei.png') no-repeat;
     filter: grayscale(100%);
     background-size: cover;
+    position: absolute;
+    top: 20px;
+    left: 0;
+    right: 0;
   }
   &::before, img{
-    position: absolute;
-    top: 0;
-    left: 0;
+    width: 200px;
+    aspect-ratio: 771/963;
+    margin: 0 auto;
   }
   .show-trophy{
     mask-image: linear-gradient(to bottom, transparent var(--nums), #fff  var(--nums));
@@ -44,17 +47,20 @@ const nums = computed(() => `${100 - props.num}%`)
 }
 
 @keyframes shake {
-  0%{
-    scale: .6;
-  }
   12.5%, 62.5%{
     rotate: -10deg;
-  }
-  50%{
-    scale: 1;
   }
   37.5%, 87.5%{
     rotate: 10deg;
   }
 }
+@keyframes fade {
+  0%{
+    scale: .6;
+  }
+  100%{
+    scale: 1;
+  }
+}
+
 </style>
