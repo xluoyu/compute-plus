@@ -13,20 +13,28 @@ const curQuestionIndex = computed(() => Math.min(questionIndex.value + 1, props.
 /**
  * 题目开始滚动
  */
-const beginRoll = () => {
+
+const timer = ref<NodeJS.Timer>()
+
+const begin = () => {
   questionIndex.value += 1
 
-  const timer = setInterval(() => {
+  timer.value = setInterval(() => {
     questionIndex.value += 1
 
     if (questionIndex.value >= props.list.length) {
-      clearInterval(timer)
+      clearInterval(timer.value)
     }
   }, 1300)
 }
 
+const pause = () => {
+  clearInterval(timer.value)
+}
+
 defineExpose({
-  begin: beginRoll,
+  begin,
+  pause,
   curQuestionIndex,
 })
 

@@ -219,6 +219,13 @@ const curIndex = computed(() => questionRef.value?.curQuestionIndex || 0)
 
 const lockStatus = computed(() => curIndex.value < 3)
 
+/**
+ * 暂停
+ */
+const pause = () => {
+  questionRef.value!.pause()
+}
+
 </script>
 
 <template>
