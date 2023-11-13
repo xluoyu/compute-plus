@@ -1,41 +1,42 @@
 <script setup lang="ts">
-import type { IQuestion } from '~/common.d'
+import { isString } from 'lodash-es'
+import { useCreateQuestion } from '../composables/core'
 
 const props = defineProps<{
-  list: IQuestion[]
+  nums: number
 }>()
 
-const questionIndex = ref<number>(-1)
-
-const curQuestion = computed(() => props.list[questionIndex.value])
-const curQuestionIndex = computed(() => Math.min(questionIndex.value + 1, props.list.length))
+const { curQuestion, goNextQuestion, allQuestionLength } = useCreateQuestion()
 
 /**
  * 题目开始滚动
  */
-
 const timer = ref<NodeJS.Timer>()
+const scrolledNum = ref(0)
+
+const lockStatus = computed(() => scrolledNum.value <= props.nums)
+
+/**
+ * 滚动问题框
+ */
+const scrollQuestion = () => {
+  scrolledNum.value += 1
+  goNextQuestion()
+}
 
 const begin = () => {
-  questionIndex.value += 1
-
   timer.value = setInterval(() => {
-    questionIndex.value += 1
-
-    if (questionIndex.value >= props.list.length) {
+    scrollQuestion()
+    if (scrolledNum.value > props.nums) {
       clearInterval(timer.value)
     }
   }, 1300)
 }
 
-const pause = () => {
-  clearInterval(timer.value)
-}
-
 defineExpose({
   begin,
-  pause,
-  curQuestionIndex,
+  lockStatus,
+  scrollQuestion,
 })
 
 </script>
@@ -44,22 +45,19 @@ defineExpose({
   <div class="box">
     <div class="title">
       <span>题目</span>
-      <span>{{ curQuestionIndex }} / {{ list.length }}</span>
+      <span>{{ scrolledNum }} / {{ allQuestionLength }}</span>
     </div>
     <div class="box-content question-area">
       <Transition name="roll">
-        <div v-if="curQuestion" :key="curQuestion.i" class="grid grid-cols-5 !w-2/3 mx-auto">
+        <div v-if="isString(curQuestion)" :key="curQuestion">
+          {{ curQuestion }}
+        </div>
+        <div v-else :key="curQuestion.i" class="grid grid-cols-5 !w-2/3 mx-auto">
           <span>{{ curQuestion.a }}</span>
           <span>{{ curQuestion.fn }}</span>
           <span>{{ curQuestion.b }}</span>
           <span> = </span>
           <span> ? </span>
-        </div>
-        <div v-else-if="questionIndex > 0 && curQuestionIndex === list.length">
-          题目播放完毕
-        </div>
-        <div v-else>
-          准备开始
         </div>
       </Transition>
     </div>

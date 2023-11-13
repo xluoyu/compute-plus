@@ -1,113 +1,32 @@
-import type { ICreateQuestionOptions, IMethods, IQuestion } from '~/common'
-
+import { createQuestion, getMethod } from '../utils/getQuestion'
+import type { ICreateQuestionOptions, IQuestion } from '~/common'
 /**
- * 各个难度的默认配置
+ * 题目表
  */
-export const defaultLevelConfig: Record<number, {
-  range: number
-  methods: IMethods[]
-  accuracy: number
-  questionNum: number
-}> = {
-  1: {
-    range: 10,
-    methods: ['+'],
-    questionNum: 10,
-    accuracy: 70,
-  },
-  2: {
-    range: 20,
-    methods: ['+', '-'],
-    questionNum: 15,
-    accuracy: 80,
-  },
-  3: {
-    range: 20,
-    methods: ['+', '-', '*', '/'],
-    questionNum: 20,
-    accuracy: 85,
-  },
-}
+export const questionList = ref<IQuestion[]>([])
 
-export type IDefaultLevelConfigKeys = keyof typeof defaultLevelConfig
-
+export const allQuestionLength = computed(() => questionList.value.length)
 /**
- * 获取一个范围内的随机数
- * 向上取整
+ * 当前的下标
  */
-const getRoundNum = (maxNum: number) => {
-  return Math.ceil(Math.random() * maxNum)
-}
-
-/**
- * 创建题目
- */
-const createQuestion: Record<IMethods, (range: number, i: number) => IQuestion> = {
-  '+': (range, i) => {
-    const a = getRoundNum(range - 1)
-    const b = getRoundNum(range - a)
-
-    const answer = a + b
-
-    return { a, b, fn: '+', answer, i }
-  },
-  '-': (range, i) => {
-    let a = getRoundNum(range)
-    let b = getRoundNum(range)
-
-    /**
-     * 如果a小于b，交换位置
-     * 保证答案为正数
-     */
-    if (a < b) {
-      [a, b] = [b, a]
-    }
-
-    const answer = a - b
-
-    return { a, b, fn: '-', answer, i }
-  },
-  '*': (_, i) => {
-    const a = getRoundNum(9)
-    const b = getRoundNum(9)
-    const answer = a * b
-
-    return { a, b, fn: '*', answer, i }
-  },
-  '/': (_, i) => {
-    const b = getRoundNum(9)
-    const answer = getRoundNum(9)
-    const a = answer * b
-
-    return { a, b, fn: '/', answer, i }
-  },
-}
+const curQuestionIndex = ref(-1)
 
 /**
  * 用于生成题目
  * @param range 数值范围
  * @param difficulty 题目难度
  */
-export const useCreateQuestion = (options: ICreateQuestionOptions) => {
-  const questionList = ref<IQuestion[]>([])
-
-  /**
-   * 获取一个给定范围的计算方法
-   */
-  const getMethod = () => {
-    return options.methods[Math.floor(Math.random() * options.methods.length)]
-  }
-
+export const useCreateQuestion = () => {
   /**
    * 创建 num 数量的题目
    * @param num
    */
-  const generate = (num: number) => {
+  const generate = (options: ICreateQuestionOptions, num: number) => {
     const _questionList = []
     const baseIndex = questionList.value.length
 
     for (let index = 0; index < num; index++) {
-      const fn = getMethod()
+      const fn = getMethod(options.methods)
       let _range = 0
       /**
        * 如果有预设的范围，按照预设
@@ -137,19 +56,44 @@ export const useCreateQuestion = (options: ICreateQuestionOptions) => {
     return _questionList
   }
 
-  if ('questionNum' in options && options.questionNum) {
-    generate(options.questionNum)
-  } else {
-    /**
-     * 没有预设questionNum
-     *
-     * 说明是无尽模式，直接生成20题
-     */
-    generate(20)
+  /**
+   * 当前的考题
+   */
+  const curQuestion = computed(() => {
+    if (curQuestionIndex.value === -1) {
+      return '准备开始'
+    } else if (curQuestionIndex.value >= allQuestionLength.value) {
+      return '题目播放完毕'
+    } else {
+      return questionList.value[curQuestionIndex.value]
+    }
+  })
+
+  /**
+   * 前往下一题，仅在小于等于的情况下
+   */
+  const goNextQuestion = () => {
+    if (curQuestionIndex.value <= allQuestionLength.value) {
+      curQuestionIndex.value += 1
+    }
   }
+
+  // if ('questionNum' in options && options.questionNum) {
+  //   generate(options.questionNum)
+  // } else {
+  //   /**
+  //    * 没有预设questionNum
+  //    *
+  //    * 说明是无尽模式，直接生成20题
+  //    */
+  //   generate(20)
+  // }
 
   return {
     questionList,
     generate,
+    curQuestion,
+    allQuestionLength,
+    goNextQuestion,
   }
 }

@@ -104,8 +104,8 @@ onUnmounted(() => {
 
 <style lang="scss" scoped>
 .keyboard{
-  grid-template-rows: repeat(4, 70px);
-  grid-template-columns: repeat(4, 70px);
+  grid-template-rows: repeat(4, 76px);
+  grid-template-columns: repeat(4, 76px);
   user-select: none;
 }
 .btn{
@@ -117,7 +117,7 @@ onUnmounted(() => {
   opacity: 1;
   box-shadow: inset 0px -3px 10px 2px rgb(0 0 0 / 0.3);
   &.active, &:active{
-    opacity: .7;
+    opacity: .6;
   }
 }
 
