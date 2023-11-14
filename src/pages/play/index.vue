@@ -104,7 +104,7 @@ onMounted(() => {
   <div class="px-3 h-full">
     <Header title="关卡2" />
     <div class="flex flex-col h-[calc(100%-var(--header-h))] justify-around">
-      <Question ref="questionRef" :nums="3" />
+      <Question ref="questionRef" :nums="1" />
       <div class="box">
         <div class="title flex justify-between">
           <span>答题</span>

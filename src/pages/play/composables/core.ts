@@ -64,7 +64,7 @@ export const useCreateQuestion = () => {
   const curQuestion = computed(() => {
     if (curQuestionIndex.value === -1) {
       return '准备开始'
-    } else if (curQuestionIndex.value >= allQuestionLength.value) {
+    } else if (curQuestionIndex.value >= allQuestionLength.value - 1) {
       return '题目播放完毕'
     } else {
       return questionList.value[curQuestionIndex.value]
