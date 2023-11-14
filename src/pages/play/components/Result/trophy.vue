@@ -10,7 +10,7 @@ const nums = computed(() => `${100 - props.num}%`)
 
 <template>
   <div class="trophy drop-shadow-[0_5px_15px_rgba(255,243,171,0.7)]">
-    <img src="@/assets/jiangbei.png" :style="{'--nums': nums}" class="show-trophy">
+    <img src="@/assets/jiangbei.webp" :style="{'--nums': nums}" class="show-trophy">
   </div>
 </template>
 
@@ -27,7 +27,7 @@ const nums = computed(() => `${100 - props.num}%`)
   animation: fade .5s, shake 1s forwards;
   &::before{
     content: '';
-    background: url('@/assets/jiangbei.png') no-repeat;
+    background: url('@/assets/jiangbei.webp') no-repeat;
     filter: grayscale(100%);
     background-size: cover;
     position: absolute;
@@ -37,7 +37,7 @@ const nums = computed(() => `${100 - props.num}%`)
   }
   &::before, img{
     width: 200px;
-    aspect-ratio: 771/963;
+    aspect-ratio: 429/550;
     margin: 0 auto;
   }
   .show-trophy{

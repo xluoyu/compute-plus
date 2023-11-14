@@ -20,18 +20,27 @@ const lockStatus = computed(() => scrolledNum.value <= props.nums)
  * 滚动问题框
  */
 const scrollQuestion = () => {
-  scrolledNum.value += 1
+  scrolledNum.value = Math.min(scrolledNum.value + 1, allQuestionLength.value)
   goNextQuestion()
 }
 
 const begin = () => {
-  timer.value = setInterval(() => {
+  const fn = () => {
     scrollQuestion()
     if (scrolledNum.value > props.nums) {
       clearInterval(timer.value)
     }
-  }, 1300)
+  }
+
+  setTimeout(() => {
+    fn()
+    timer.value = setInterval(fn, 1300)
+  }, 500)
 }
+
+onUnmounted(() => {
+  timer.value && clearInterval(timer.value)
+})
 
 defineExpose({
   begin,

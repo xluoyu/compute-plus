@@ -9,7 +9,7 @@ export const allQuestionLength = computed(() => questionList.value.length)
 /**
  * 当前的下标
  */
-const curQuestionIndex = ref(-1)
+export const curQuestionIndex = ref(-1)
 
 /**
  * 用于生成题目
@@ -53,6 +53,8 @@ export const useCreateQuestion = () => {
     }
 
     questionList.value.push(..._questionList)
+
+    console.log(questionList.value)
     return _questionList
   }
 

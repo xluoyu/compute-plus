@@ -40,19 +40,21 @@ defineExpose({
   <div v-if="status" class="mask">
     <div class="flex flex-col items-center justify-around h-full mx-4">
       <div class="text-center w-4/5">
-        <p class="-indent-60 text-md mb-3 text-slate-200">
-          准确率
+        <p class="-indent-60 text-md mb-3 text-slate-200 italic">
+          {{ data.type === 'percentage' ? '准确率' : '得分' }}
         </p>
         <h2 class="text-4xl text-[#fff5c2]">
-          {{ data.num }} %
+          {{ data.num + (data.type === 'percentage' ? '%' : '') }}
         </h2>
-        <Trophy :num="data.num" class="mx-auto mt-5" />
-        <p v-if="data.result" class="result-text success-text">
-          过关啦!
-        </p>
-        <p v-else class="result-text fail-text">
-          失败了!
-        </p>
+        <Trophy :num="data.type === 'percentage' ? data.num : 100" class="mx-auto mt-5" />
+        <template v-if="data.type === 'percentage'">
+          <p v-if="data.result" class="result-text success-text">
+            过关啦!
+          </p>
+          <p v-else class="result-text fail-text">
+            失败了!
+          </p>
+        </template>
       </div>
 
       <div class="flex justify-center gap-[10%] w-full">
@@ -112,6 +114,8 @@ defineExpose({
   background-clip: text;
   color: transparent;
   animation: resultText .6s ease;
+  font-weight: 600;
+  filter: drop-shadow(0 5px 15px rgba(255,243,171,0.7));
 }
 
 .success-text{

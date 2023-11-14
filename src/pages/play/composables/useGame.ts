@@ -1,6 +1,6 @@
 import type { IDefaultLevelConfigKeys } from '../utils/config'
 import { defaultLevelConfig } from '../utils/config'
-import { allQuestionLength, questionList, useCreateQuestion } from './core'
+import { allQuestionLength, curQuestionIndex, questionList, useCreateQuestion } from './core'
 import { answerRecord, useAnswerRecord } from './useAnswer'
 import type { ICreateQuestionOptions, IEndlessOptions, IMethods, INormalOptions, IResultOptions, IScoreType } from '~/common'
 
@@ -171,6 +171,10 @@ export const useGame = ({
     },
   })
 
+  /**
+   * 初始化
+   * 生成题目列表
+   */
   const initGame = () => {
     if ('questionNum' in playOptions.value) {
       generateQuestionList(playOptions.value.questionNum)
@@ -190,6 +194,7 @@ export const useGame = ({
   const clearGame = () => {
     questionList.value = []
     answerRecord.value = []
+    curQuestionIndex.value = -1
   }
 
   onUnmounted(clearGame)
