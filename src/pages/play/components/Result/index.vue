@@ -73,42 +73,6 @@ defineExpose({
 </template>
 
 <style lang="scss" scoped>
-.btn{
-  padding: 5px 30px;
-  color: #fff;
-  font-size: 18px;
-  transform: skewX(-17deg);
-  position: relative;
-  mask-image: linear-gradient(90deg, transparent var(--left), #fff 50%,transparent var(--right));
-  animation: btnshow 1s ease forwards;
-  &:hover{
-    opacity: .8;
-  }
-}
-
-@property --left {
-  syntax: '<percentage>';
-  inherits: false;
-  initial-value: 40%;
-}
-
-@property --right {
-  syntax: '<percentage>';
-  inherits: false;
-  initial-value: 60%;
-}
-
-@keyframes btnshow {
-  0%{
-    --left: 40%;
-    --right: 60%;
-  }
-  100%{
-    --left: -60%;
-    --right: 160%;
-  }
-}
-
 .result-text {
   @apply mt-5 text-3xl;
   background-clip: text;
