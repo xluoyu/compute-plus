@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import Countdown from './components/Countdown.vue'
-import Header from './components/Header.vue'
 import Keyboard from './components/Keyboard.vue'
 import Question from './components/Question.vue'
 import Guide from './components/Guide.vue'
@@ -95,6 +94,21 @@ const lockStatus = computed(() => {
   return questionRef.value ? questionRef.value.lockStatus : true
 })
 
+const pageTitle = computed(() => {
+  switch (playOptions.value.type) {
+    case 'normal':
+      return `关卡${playOptions.value.level}`
+    case 'endless':
+      return '无尽模式'
+    case 'diy':
+      return `自定义 - ${playOptions.value.successType === 'normal' ? '闯关模式' : '无尽模式'}`
+  }
+})
+
+const pause = () => {
+  console.log('暂停')
+}
+
 onMounted(() => {
   initGame()
 })
@@ -102,7 +116,11 @@ onMounted(() => {
 
 <template>
   <div class="px-3 h-full">
-    <Header title="关卡2" />
+    <Header :title="pageTitle" :right-fn="pause">
+      <template #right>
+        <span class="text-lg text-slate-500">暂停</span>
+      </template>
+    </Header>
     <div class="flex flex-col h-[calc(100%-var(--header-h))] justify-around">
       <Question ref="questionRef" :nums="1" />
       <div class="box">

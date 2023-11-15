@@ -14,8 +14,8 @@ const options = reactive<IDiyOptions>({
 </script>
 
 <template>
-  <div>
-    <div>自定义</div>
+  <div class="p-6">
+    <Header title="自定义" />
     <el-form :model="options">
       <el-form-item label="游戏类型">
         <el-radio-group v-model="options.successType" name="radiogroup">

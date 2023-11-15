@@ -2,32 +2,32 @@
 import CarbonPreviousOutline from '~icons/carbon/previous-outline'
 const props = withDefaults(defineProps<{
   title: string
-  path?: string
+  rightFn?: Function
   hasBack?: boolean
 }>(), {
   hasBack: true,
-  path: '',
+  rightFn: undefined,
   title: '',
 })
 
 const router = useRouter()
 
 const navTo = () => {
-  if (props.hasBack) {
-    if (props.path) {
-      router.push(props.path)
-    } else {
-      router.back()
-    }
+  if (props.rightFn) {
+    props.rightFn()
+  } else {
+    router.back()
   }
 }
 
 </script>
 
 <template>
-  <div class="h-[var(--header-h)] flex items-center justify-center">
-    <div @click="navTo">
-      <CarbonPreviousOutline />
+  <div class="h-[var(--header-h)] flex items-center text-xl justify-center">
+    <div v-if="hasBack" class="cursor-pointer " @click="navTo">
+      <slot name="right">
+        <CarbonPreviousOutline />
+      </slot>
     </div>
     <div v-if="title" class="flex-1 -indent-[32px]">
       {{ title }}

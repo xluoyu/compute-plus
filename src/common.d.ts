@@ -34,18 +34,15 @@ export interface IEndlessOptions {
   methods: IMethods[]
 }
 
-export type IDiyOptions = {
+export interface IDiyOptions {
   type: 'diy'
   methods: IMethods[]
   range: number
-} & ({
-  successType: 'normal' // 按照闯关模式的通关条件
-  accuracy: number // 准确率
-  questionNum: number // 题目数量
-} | {
-  successType: 'endless' // 按照无尽模式的通关条件
-  errNumber: number // 错误数量
-})
+  successType: 'normal' | 'endless' // 按照闯关模式的通关条件, 按照无尽模式的通关条件
+  accuracy?: number // 准确率
+  questionNum?: number // 题目数量
+  errNumber?: number // 错误数量
+}
 
 export type ICreateQuestionOptions = INormalOptions | IEndlessOptions | IDiyOptions
 
