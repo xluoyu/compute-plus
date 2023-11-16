@@ -2,6 +2,7 @@
 import Countdown from './components/Countdown.vue'
 import Keyboard from './components/Keyboard.vue'
 import Question from './components/Question.vue'
+import ErrorIcon from './components/ErrorIcon.vue'
 import Guide from './components/Guide.vue'
 import Result from './components/Result/index.vue'
 import type { CountdownInstance, QuestionInstance, ResultInstance } from './components/index'
@@ -118,20 +119,19 @@ onMounted(() => {
   <div class="p-6 h-full">
     <Header :title="pageTitle" :right-fn="pause">
       <template #right>
-        <span class="text-lg text-slate-500">暂停</span>
+        <span class="text-base text-slate-500">暂停</span>
       </template>
     </Header>
     <div class="flex flex-col h-[calc(100%-var(--header-h))] justify-around">
-      <Question ref="questionRef" :nums="1" />
+      <Question ref="questionRef" :nums="playOptions.preNum" />
       <div class="box">
-        <div class="title flex justify-between">
+        <div class="title flex justify-between items-center">
           <span>答题</span>
           <div v-if="scoreType === 'percentage' && answerIndex + 1 <= allQuestionLength">
             第{{ answerIndex + 1 }}题
           </div>
-          <div v-if="scoreType === 'score'">
-            {{ errNumber }} 错误{{ (playOptions as IEndlessOptions).errNumber }}
-          </div>
+          <error-icon v-if="scoreType === 'score'" :err-num="errNumber" :all-num="(playOptions as IEndlessOptions).errNumber" />
+          <!-- {{ errNumber }} 错误{{ (playOptions as IEndlessOptions).errNumber }} -->
         </div>
         <div class="box-content">
           <div ref="answerArea" class="answerArea" :class="curAnswerResult === 1 ? 'answer-success' : curAnswerResult === 2 ? 'answer-error' : ''">

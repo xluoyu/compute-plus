@@ -51,7 +51,7 @@ export const useGame = ({
         return {
           type: 'diy',
           range: Number(route.query.range),
-          preNum: Number(route.query.perNum),
+          preNum: Number(route.query.preNum),
           methods: route.query.methods as IMethods[],
           successType: route.query.successType as ('normal' | 'endless'),
           accuracy: Number(route.query.accuracy),

@@ -92,7 +92,7 @@ const share = async() => {
       </template>
       <template v-else>
         <el-form-item label="错误数量">
-          <ASlider v-model="options.errNumber" show-stops :max="10" :min="1" />
+          <ASlider v-model="options.errNumber" show-stops :max="8" :min="1" />
         </el-form-item>
       </template>
     </el-form>

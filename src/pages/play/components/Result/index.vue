@@ -58,13 +58,13 @@ defineExpose({
       </div>
 
       <div class="flex justify-center gap-[10%] w-full">
-        <router-link to="/" class="btn bg-gray-500">
+        <router-link to="/" class="btn-skew bg-gray-500">
           返回首页
         </router-link>
-        <button v-if="data.result && data.nextFn" class="btn bg-[#ff7904]" @click="data.nextFn">
+        <button v-if="data.result && data.nextFn" class="btn-skew bg-[#ff7904]" @click="data.nextFn">
           进入下一关
         </button>
-        <button v-if="!data.result" class="btn bg-[#ff7904]" @click="reload">
+        <button v-if="!data.result" class="btn-skew bg-[#ff7904]" @click="reload">
           再来一次！
         </button>
       </div>
