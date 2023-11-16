@@ -107,7 +107,25 @@ const pageTitle = computed(() => {
 })
 
 const pause = () => {
-  console.log('暂停')
+  questionRef.value!.pause()
+
+  ElMessageBox.confirm(
+    '整理一下思绪',
+    '暂停中',
+    {
+      confirmButtonText: '继续游戏',
+      cancelButtonText: '回到上一页',
+      center: true,
+      showClose: false,
+      closeOnClickModal: false,
+    },
+  )
+    .then(() => {
+      questionRef.value!.againBegin()
+    })
+    .catch(() => {
+      router.back()
+    })
 }
 
 onMounted(() => {
@@ -131,7 +149,6 @@ onMounted(() => {
             第{{ answerIndex + 1 }}题
           </div>
           <error-icon v-if="scoreType === 'score'" :err-num="errNumber" :all-num="(playOptions as IEndlessOptions).errNumber" />
-          <!-- {{ errNumber }} 错误{{ (playOptions as IEndlessOptions).errNumber }} -->
         </div>
         <div class="box-content">
           <div ref="answerArea" class="answerArea" :class="curAnswerResult === 1 ? 'answer-success' : curAnswerResult === 2 ? 'answer-error' : ''">

@@ -24,17 +24,28 @@ const scrollQuestion = () => {
   goNextQuestion()
 }
 
-const begin = () => {
-  const fn = () => {
-    scrollQuestion()
-    if (scrolledNum.value > props.nums) {
-      clearInterval(timer.value)
-    }
+const autoScrollQuestion = () => {
+  scrollQuestion()
+  if (scrolledNum.value > props.nums) {
+    clearInterval(timer.value)
   }
+}
 
+const pause = () => {
+  clearInterval(timer.value)
+}
+
+const againBegin = () => {
+  if (scrolledNum.value <= props.nums) {
+    autoScrollQuestion()
+    timer.value = setInterval(autoScrollQuestion, 1300)
+  }
+}
+
+const begin = () => {
   setTimeout(() => {
-    fn()
-    timer.value = setInterval(fn, 1300)
+    autoScrollQuestion()
+    timer.value = setInterval(autoScrollQuestion, 1300)
   }, 500)
 }
 
@@ -46,6 +57,8 @@ defineExpose({
   begin,
   lockStatus,
   scrollQuestion,
+  pause,
+  againBegin,
 })
 
 </script>
