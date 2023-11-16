@@ -23,6 +23,7 @@ export interface INormalOptions {
   type: 'normal'
   level: number
   range: number // 取值范围
+  preNum: number // 前置题目数量
   methods: IMethods[]
   accuracy: number // 正确率 取百分比
   questionNum: number // 题目数量
@@ -31,6 +32,7 @@ export interface INormalOptions {
 export interface IEndlessOptions {
   type: 'endless'
   errNumber: number // 错误数量
+  preNum: number
   methods: IMethods[]
 }
 
@@ -38,6 +40,7 @@ export interface IDiyOptions {
   type: 'diy'
   methods: IMethods[]
   range: number
+  preNum: number
   successType: 'normal' | 'endless' // 按照闯关模式的通关条件, 按照无尽模式的通关条件
   accuracy?: number // 准确率
   questionNum?: number // 题目数量

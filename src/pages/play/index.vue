@@ -115,7 +115,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="px-3 h-full">
+  <div class="p-6 h-full">
     <Header :title="pageTitle" :right-fn="pause">
       <template #right>
         <span class="text-lg text-slate-500">暂停</span>

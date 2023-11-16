@@ -23,7 +23,7 @@ const handleClick = () => {
 </script>
 
 <template>
-  <div class="btn" :class="{'active': activeStatus}" @click="handleClick">
+  <div class="abtn" :class="{'active': activeStatus}" @click="handleClick">
     <svg height="100%" width="100%" xmlns="http://www.w3.org/2000/svg">
       <rect class="outline" height="100%" width="100%" />
     </svg>
@@ -34,7 +34,7 @@ const handleClick = () => {
 </template>
 
 <style lang="scss" scoped>
-.btn{
+.abtn{
   --w: v-bind(width);
   --h: 50px;
   --color: #ed8225;

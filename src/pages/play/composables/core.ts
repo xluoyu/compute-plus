@@ -54,7 +54,6 @@ export const useCreateQuestion = () => {
 
     questionList.value.push(..._questionList)
 
-    console.log(questionList.value)
     return _questionList
   }
 
@@ -79,17 +78,6 @@ export const useCreateQuestion = () => {
       curQuestionIndex.value += 1
     }
   }
-
-  // if ('questionNum' in options && options.questionNum) {
-  //   generate(options.questionNum)
-  // } else {
-  //   /**
-  //    * 没有预设questionNum
-  //    *
-  //    * 说明是无尽模式，直接生成20题
-  //    */
-  //   generate(20)
-  // }
 
   return {
     questionList,

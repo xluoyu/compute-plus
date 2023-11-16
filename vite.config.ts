@@ -33,8 +33,8 @@ export default defineConfig({
         'vue',
         'vue/macros',
         'vue-router',
-        '@vueuse/core',
       ],
+      resolvers: [ElementPlusResolver()],
       dts: true,
     }),
 

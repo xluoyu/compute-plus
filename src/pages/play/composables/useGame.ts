@@ -35,12 +35,13 @@ export const useGame = ({
   /**
    * 游戏启动参数
    */
-  const playOptions = computed<ICreateQuestionOptions>(() => {
+  const playOptions = computed<Required<ICreateQuestionOptions>>(() => {
     switch (route.query.type) {
       case 'endless':
         return {
           type: 'endless',
           errNumber: 3,
+          preNum: 3,
           methods: defaultLevelConfig[3].methods,
         }
       case 'diy':
@@ -50,7 +51,8 @@ export const useGame = ({
         return {
           type: 'diy',
           range: Number(route.query.range),
-          methods: (route.query.methods as string).split(',') as IMethods[],
+          preNum: Number(route.query.perNum),
+          methods: route.query.methods as IMethods[],
           successType: route.query.successType as ('normal' | 'endless'),
           accuracy: Number(route.query.accuracy),
           questionNum: Number(route.query.questionNum),
