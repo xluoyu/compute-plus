@@ -44,7 +44,7 @@ const handleClick = (key: BtnKeys) => {
       </a-btn>
     </div>
 
-    <a herf="https://github.com/xluoyu/compute-plus" class="text-xl block mx-auto">
+    <a href="https://github.com/xluoyu/compute-plus" target="_blank" class="text-xl block mx-auto">
       <CarbonLogoGithub />
     </a>
   </div>
