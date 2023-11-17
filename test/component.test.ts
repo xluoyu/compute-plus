@@ -1,22 +1,48 @@
 import { mount } from '@vue/test-utils'
-import { describe, expect, it } from 'vitest'
-import Counter from '../src/components/Counter.vue'
+import { describe, expect, test } from 'vitest'
+import { useCreateQuestion } from '../src/pages/play/composables/core'
+import { nextMacro } from './utils'
+import { useGame } from '~/pages/play/composables'
+import Keyboard from '~/pages/play/components/Keyboard.vue'
 
-describe('Counter.vue', () => {
-  it('should render', () => {
-    const wrapper = mount(Counter, { props: { initial: 10 } })
-    expect(wrapper.text()).toContain('10')
-    expect(wrapper.html()).toMatchSnapshot()
-  })
+const commonFns = {
+  submitAnswerAfter() {},
+  scrollQuestion() {},
+  gameOverAfter() {},
+}
 
-  it('should be interactive', async() => {
-    const wrapper = mount(Counter, { props: { initial: 0 } })
-    expect(wrapper.text()).toContain('0')
+describe('键盘', () => {
+  test('输入', async() => {
+    const { goNextQuestion } = useCreateQuestion()
+    const { showCurAnswer, handleCurAnswer, initGame } = useGame({
+      query: {},
+      ...commonFns,
+    })
+    const wrapper = mount(Keyboard, {
+      props: {
+        handleCurAnswer,
+        curAnswer: showCurAnswer.value,
+        lock: false,
+      },
+    })
+    initGame()
 
-    expect(wrapper.find('.inc').exists()).toBe(true)
+    goNextQuestion()
 
-    await wrapper.get('button').trigger('click')
+    const getBtn = (content: string) => wrapper.get(`[data-content="${content}"]`)
 
-    expect(wrapper.text()).toContain('1')
+    getBtn('1').trigger('click')
+    expect(showCurAnswer.value).toBe('1')
+    getBtn('5').trigger('click')
+    expect(showCurAnswer.value).toBe('15')
+    getBtn('9').trigger('click')
+    expect(showCurAnswer.value).toBe('159')
+    getBtn('4').trigger('click')
+    expect(showCurAnswer.value).toBe('159')
+    getBtn('Backspace').trigger('click')
+    expect(showCurAnswer.value).toBe('15')
+    getBtn('Enter').trigger('click')
+    await nextMacro()
+    expect(showCurAnswer.value).toBe('')
   })
 })

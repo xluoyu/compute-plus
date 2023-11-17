@@ -49,7 +49,9 @@ export const useAnswerRecord = ({ getSubmitResult, submitEnd }: {
       answerIndex.value += 1
       curAnswer.value = []
 
-      submitEnd(answerRecord.value)
+      nextTick(() => {
+        submitEnd(answerRecord.value)
+      })
     }
 
     switch (key) {

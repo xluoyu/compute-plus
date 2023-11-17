@@ -109,7 +109,7 @@ onUnmounted(() => {
   user-select: none;
 }
 .btn{
-  @apply full rounded-sm flex items-center justify-center;
+  @apply w-full h-full rounded-sm flex items-center justify-center;
   /* background-image: radial-gradient(circle, #9bc7f4, #42688e); */
   background: #accbed;
   color: #333;

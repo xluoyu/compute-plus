@@ -11,6 +11,8 @@ export const allQuestionLength = computed(() => questionList.value.length)
  */
 export const curQuestionIndex = ref(-1)
 
+export const hasQuestion = computed(() => curQuestionIndex.value < allQuestionLength.value)
+
 /**
  * 用于生成题目
  * @param range 数值范围
@@ -63,7 +65,7 @@ export const useCreateQuestion = () => {
   const curQuestion = computed(() => {
     if (curQuestionIndex.value === -1) {
       return '准备开始'
-    } else if (curQuestionIndex.value >= allQuestionLength.value - 1) {
+    } else if (curQuestionIndex.value >= allQuestionLength.value) {
       return '题目播放完毕'
     } else {
       return questionList.value[curQuestionIndex.value]
@@ -71,10 +73,10 @@ export const useCreateQuestion = () => {
   })
 
   /**
-   * 前往下一题，仅在小于等于的情况下
+   * 前往下一题，仅在小于的情况下
    */
   const goNextQuestion = () => {
-    if (curQuestionIndex.value <= allQuestionLength.value) {
+    if (hasQuestion.value) {
       curQuestionIndex.value += 1
     }
   }

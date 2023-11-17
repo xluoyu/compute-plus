@@ -1,8 +1,17 @@
 import type { IDefaultLevelConfigKeys } from '../utils/config'
 import { defaultLevelConfig } from '../utils/config'
-import { allQuestionLength, curQuestionIndex, questionList, useCreateQuestion } from './core'
+import { allQuestionLength, curQuestionIndex, hasQuestion, questionList, useCreateQuestion } from './core'
 import { answerRecord, useAnswerRecord } from './useAnswer'
 import type { ICreateQuestionOptions, IEndlessOptions, IMethods, INormalOptions, IResultOptions, IScoreType } from '~/common'
+
+/**
+   * 清理数据
+   */
+export const clearGame = () => {
+  questionList.value = []
+  answerRecord.value = []
+  curQuestionIndex.value = -1
+}
 
 /**
  * 启动游戏
@@ -10,10 +19,12 @@ import type { ICreateQuestionOptions, IEndlessOptions, IMethods, INormalOptions,
  * 初始化游戏参数
  */
 export const useGame = ({
+  query,
   submitAnswerAfter,
   gameOverAfter,
   scrollQuestion,
 }: {
+  query: any
   /**
    * 下一题
    */
@@ -30,13 +41,11 @@ export const useGame = ({
    */
   gameOverAfter: (a: IResultOptions, b: ICreateQuestionOptions) => void
 }) => {
-  const route = useRoute()
-
   /**
    * 游戏启动参数
    */
   const playOptions = computed<Required<ICreateQuestionOptions>>(() => {
-    switch (route.query.type) {
+    switch (query.type) {
       case 'endless':
         return {
           type: 'endless',
@@ -45,27 +54,27 @@ export const useGame = ({
           methods: defaultLevelConfig[3].methods,
         }
       case 'diy':
-        if (!(route.query.range && route.query.methods && route.query.successType)) {
+        if (!(query.range && query.methods && query.successType)) {
           return { type: 'normal', level: 1, ...defaultLevelConfig[1] }
         }
         return {
           type: 'diy',
-          range: Number(route.query.range),
-          preNum: Number(route.query.preNum),
-          methods: route.query.methods as IMethods[],
-          successType: route.query.successType as ('normal' | 'endless'),
-          accuracy: Number(route.query.accuracy),
-          questionNum: Number(route.query.questionNum),
-          errNumber: Number(route.query.errNumber),
+          range: Number(query.range),
+          preNum: Number(query.preNum),
+          methods: query.methods as IMethods[],
+          successType: query.successType as ('normal' | 'endless'),
+          accuracy: Number(query.accuracy),
+          questionNum: Number(query.questionNum) || 0,
+          errNumber: Number(query.errNumber),
         }
       default:
         /**
          * 记录当前的关卡
          */
-        localStorage.setItem('level', (route.query.level || '1') as string)
+        localStorage.setItem('level', (query.level || '1') as string)
 
-        if (route.query.level) {
-          return { type: 'normal', level: Number(route.query.level), ...defaultLevelConfig[route.query.level as unknown as IDefaultLevelConfigKeys] }
+        if (query.level) {
+          return { type: 'normal', level: Number(query.level), ...defaultLevelConfig[query.level as unknown as IDefaultLevelConfigKeys] }
         } else {
           return { type: 'normal', level: 1, ...defaultLevelConfig[1] }
         }
@@ -166,7 +175,10 @@ export const useGame = ({
           generateQuestionList(20)
         }
 
-        if (answerIndex.value + 1 < allQuestionLength.value) {
+        /**
+         * 还有题目
+         */
+        if (hasQuestion.value) {
           scrollQuestion() // 下一题
         }
       }
@@ -177,8 +189,12 @@ export const useGame = ({
    * 初始化
    * 生成题目列表
    */
-  const initGame = () => {
-    if ('questionNum' in playOptions.value) {
+  const initGame = async() => {
+    /**
+     * 初始化一下
+     */
+    clearGame()
+    if ('questionNum' in playOptions.value && playOptions.value.questionNum > 0) {
       generateQuestionList(playOptions.value.questionNum)
     } else {
       /**
@@ -189,17 +205,6 @@ export const useGame = ({
       generateQuestionList(20)
     }
   }
-
-  /**
-   * 清理数据
-   */
-  const clearGame = () => {
-    questionList.value = []
-    answerRecord.value = []
-    curQuestionIndex.value = -1
-  }
-
-  onUnmounted(clearGame)
 
   return {
     initGame,

@@ -6,7 +6,7 @@ import ErrorIcon from './components/ErrorIcon.vue'
 import Guide from './components/Guide.vue'
 import Result from './components/Result/index.vue'
 import type { CountdownInstance, QuestionInstance, ResultInstance } from './components/index'
-import { useGame } from './composables/useGame'
+import { clearGame, useGame } from './composables/useGame'
 import { allQuestionLength } from './composables'
 import CarbonCheckmarkOutline from '~icons/carbon/checkmark-outline'
 import CarbonCloseOutline from '~icons/carbon/close-outline'
@@ -41,6 +41,7 @@ const {
   showCurAnswer,
   handleCurAnswer,
 } = useGame({
+  query: route.query,
   scrollQuestion() {
     questionRef.value!.scrollQuestion()
   },
@@ -131,6 +132,8 @@ const pause = () => {
 onMounted(() => {
   initGame()
 })
+
+onUnmounted(clearGame)
 </script>
 
 <template>
