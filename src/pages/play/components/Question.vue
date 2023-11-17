@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { isString } from 'lodash-es'
 import { useCreateQuestion } from '../composables/core'
+import { isString } from '~/utils'
 
 const props = defineProps<{
   nums: number

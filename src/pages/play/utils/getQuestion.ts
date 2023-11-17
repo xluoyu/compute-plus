@@ -1,12 +1,5 @@
 import type { IMethods, IQuestion } from '~/common.d'
-
-/**
- * 获取一个范围内的随机数
- * 向上取整
- */
-const getRoundNum = (maxNum: number) => {
-  return Math.ceil(Math.random() * maxNum)
-}
+import { getRoundNum } from '~/utils'
 
 /**
  * 创建题目

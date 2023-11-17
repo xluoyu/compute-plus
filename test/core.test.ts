@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
-import { isString } from 'lodash-es'
 import { nextMacro } from './utils'
+import { isString } from '~/utils'
 import type { IQuestion, IResultOptions } from '~/common'
 import { questionList, useCreateQuestion } from '~/pages/play/composables/core'
 import { answerRecord } from '~/pages/play/composables/useAnswer'
