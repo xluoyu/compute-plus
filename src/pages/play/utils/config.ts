@@ -26,7 +26,7 @@ export const defaultLevelConfig: Record<number, {
   3: {
     range: 20,
     methods: ['+', '-', '*', '/'],
-    preNum: 2,
+    preNum: 3,
     questionNum: 20,
     accuracy: 85,
   },
