@@ -15,8 +15,8 @@
         <use xlink:href="#s-text" class="text-copy" />
       </g>
     </svg>
-    <h1 data-text="速算">
-      <span>速算</span>
+    <h1 data-text="溯算">
+      <span>溯算</span>
     </h1>
   </div>
 </template>

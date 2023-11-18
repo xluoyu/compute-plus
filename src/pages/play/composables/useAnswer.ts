@@ -43,6 +43,9 @@ export const useAnswerRecord = ({ getSubmitResult, submitEnd }: {
       * 提交当前答案
       */
     const submitCurAnswer = async() => {
+      /**
+       * 获取da'ti结果
+       */
       const result = await getSubmitResult(Number(showCurAnswer.value), answerIndex.value)
 
       answerRecord.value.push(result)

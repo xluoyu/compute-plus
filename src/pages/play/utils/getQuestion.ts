@@ -30,7 +30,7 @@ export const createQuestion: Record<IMethods, (range: number, i: number) => IQue
     return { a, b, fn: '-', answer, i }
   },
   /**
-   * *  / 不受运算范围的限制
+   * 不受运算范围的限制
    * @param _
    * @param i
    */

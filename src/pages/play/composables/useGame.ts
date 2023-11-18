@@ -111,6 +111,9 @@ export const useGame = ({
 
   const errNumber = computed(() => answerRecord.value.filter(item => !item).length)
 
+  /**
+   * 判断游戏是否结束
+   */
   const isGameOver = (list: boolean[]) => {
     if (scoreType.value === 'percentage') {
       if (list.length === allQuestionLength.value) {
@@ -131,7 +134,6 @@ export const useGame = ({
   const computedScore = (list: boolean[]) => {
     const trueNum = list.filter(Boolean).length
     const allNum = list.length
-    const falseNum = allNum - trueNum
 
     const options: IResultOptions = {
       type: scoreType.value,
@@ -139,17 +141,21 @@ export const useGame = ({
       result: false,
     }
 
-    /**
-       * 计算分数，是否通过
-       */
     if (scoreType.value === 'percentage') {
+      /**
+     * 闯关模式
+     * 计算分数，是否通过
+     */
       const num = Math.floor(trueNum / allNum * 100)
 
       options.result = num >= (playOptions.value as INormalOptions).accuracy
       options.num = num
     } else {
+      /**
+       * 无尽模式
+       * 给出分数即可
+       */
       options.num = trueNum
-      options.result = falseNum <= (playOptions.value as IEndlessOptions).errNumber
     }
 
     return options
