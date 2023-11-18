@@ -1,6 +1,8 @@
-## Corgi 速算
+## Corgi 溯算
 
-一个考验速记与计算的小游戏。
+一个溯算的小游戏。
+
+在线地址：[https://corgi-computed.netlify.app/](https://corgi-computed.netlify.app/)
 
 ## 游戏模式
 

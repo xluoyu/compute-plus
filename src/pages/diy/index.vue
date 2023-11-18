@@ -79,8 +79,8 @@ const share = async() => {
           </div>
         </el-checkbox-group>
       </el-form-item>
-      <el-form-item label="前置数量">
-        <ASlider v-model="options.preNum" :max="7" :min="1" />
+      <el-form-item label="记忆数量">
+        <ASlider v-model="options.preNum" :max="8" :min="1" />
       </el-form-item>
       <template v-if="options.successType === 'normal'">
         <el-form-item label="题目数量">
